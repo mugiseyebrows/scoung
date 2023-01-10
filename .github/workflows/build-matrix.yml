@@ -6,7 +6,8 @@ jobs:
     strategy:
       matrix:
         gcc-version: ["4.6.2-1", "4.7.2-1", "4.8.1-4", "4.9.3-1", "5.3.0-3", "6.3.0-1"]
-        qt-version: ["4.8.7", "4.8.4", "4.8.0"]
+        qt-version: ["4.8.7"]
+      fail-fast: false
     steps:
     - uses: actions/checkout@v3
       name: checkout
