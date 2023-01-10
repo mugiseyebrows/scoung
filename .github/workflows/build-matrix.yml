@@ -39,7 +39,7 @@ jobs:
         echo PERL not found
         exit /b
         )
-        if exist "%~dp0mingw\bin\gcc.exe" set MINGW=%~dp0mingw\bin\gcc.exe
+        if exist "%CD%\mingw\bin\gcc.exe" set MINGW=%CD%\mingw\bin\gcc.exe
         if not defined MINGW (
         echo MINGW not found
         exit /b
