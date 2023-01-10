@@ -1,0 +1,31 @@
+
+def main
+    github_checkout()
+    set_path(
+        %~dp0mingw\bin,
+        C:\Strawberry\perl\bin,
+        C:\windows\system32,
+        C:\windows
+    )
+
+    download(https://netix.dl.sourceforge.net/project/mingw/Installer/mingw-get/mingw-get-0.6.2-beta-20131004-1/mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip, mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip)
+    unzip(mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip, mingw\bin\mingw-get.exe, :o = mingw)
+
+    mingw-get.exe install gdb mingw32-make "gcc-c++=4.6.2-1"
+    g++ -v
+
+    PERL = find_app([C:\Strawberry\perl\bin\perl.exe])
+    MINGW = find_app([%~dp0mingw\bin\gcc.exe])
+    
+    # To reconfigure, run mingw32-make confclean and configure.
+
+    download(https://download.qt.io/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.zip, qt-everywhere-opensource-src-4.8.7.zip)
+    unzip(qt-everywhere-opensource-src-4.8.7.zip, qt-everywhere-opensource-src-4.8.7)
+
+    pushd qt-everywhere-opensource-src-4.8.7
+        patch(..\0001-include-winerror.h.patch, :N, :p=1)
+        call configure -prefix %CD%\..\Qt-4.8.7 -opensource -confirm-license -shared -platform win32-g++ -opengl desktop -debug-and-release -nomake tests -nomake examples
+        mingw32-make
+    popd
+        
+github_workflow 1
