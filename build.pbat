@@ -1,8 +1,12 @@
 
 def main
+    qt-version = github_matrix([4.8.7])
+    gcc-version = github_matrix([4.6.2-1, 4.7.2-1, 4.8.1-4, 4.9.3-1, 5.3.0-3, 6.3.0-1])
+
     github_checkout()
+    pushd_cd()
     set_path(
-        %~dp0mingw\bin,
+        %CD%\mingw\bin,
         C:\Strawberry\perl\bin,
         C:\windows\system32,
         C:\windows
@@ -11,21 +15,22 @@ def main
     download(https://netix.dl.sourceforge.net/project/mingw/Installer/mingw-get/mingw-get-0.6.2-beta-20131004-1/mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip, mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip)
     unzip(mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip, mingw\bin\mingw-get.exe, :o = mingw)
 
-    mingw-get.exe install gdb mingw32-make "gcc-c++=4.6.2-1"
+    mingw-get.exe install mingw32-make "gcc-c++=${{ gcc-version }}"
     g++ -v
 
     PERL = find_app([C:\Strawberry\perl\bin\perl.exe])
-    MINGW = find_app([%~dp0mingw\bin\gcc.exe])
+    MINGW = find_app([%CD%\mingw\bin\gcc.exe])
     
     # To reconfigure, run mingw32-make confclean and configure.
 
-    download(https://download.qt.io/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.zip, qt-everywhere-opensource-src-4.8.7.zip)
-    unzip(qt-everywhere-opensource-src-4.8.7.zip, qt-everywhere-opensource-src-4.8.7)
+    download(https://download.qt.io/archive/qt/4.8/${{ qt-version }}/qt-everywhere-opensource-src-${{ qt-version }}.zip, qt-everywhere-opensource-src-${{ qt-version }}.zip)
+    unzip(qt-everywhere-opensource-src-${{ qt-version }}.zip, qt-everywhere-opensource-src-${{ qt-version }})
 
-    pushd qt-everywhere-opensource-src-4.8.7
+    pushd qt-everywhere-opensource-src-${{ qt-version }}
         patch(..\0001-include-winerror.h.patch, :N, :p=1)
-        call configure -prefix %CD%\..\Qt-4.8.7 -opensource -confirm-license -shared -platform win32-g++ -opengl desktop -debug-and-release -nomake tests -nomake examples
+        call configure -prefix %CD%\..\Qt-${{ qt-version }} -opensource -confirm-license -shared -platform win32-g++ -opengl desktop -debug-and-release -nomake tests -nomake examples
         mingw32-make
     popd
+    popd_cd()
         
 github_workflow 1
