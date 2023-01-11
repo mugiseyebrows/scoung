@@ -10,6 +10,7 @@ if not defined P7Z (
 echo P7Z not found
 exit /b
 )
+if exist "C:\Program Files\Git\mingw32\bin\curl.exe" set CURL=C:\Program Files\Git\mingw32\bin\curl.exe
 if exist "C:\Program Files\Git\mingw64\bin\curl.exe" set CURL=C:\Program Files\Git\mingw64\bin\curl.exe
 if exist "C:\Windows\System32\curl.exe" set CURL=C:\Windows\System32\curl.exe
 if not defined CURL (
