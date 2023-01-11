@@ -1,1 +1,4 @@
-.github/workflows/build.yml
+*.zip
+mingw/
+Qt-4.8.7/
+qt-everywhere-opensource-src-4.8.7/

@@ -2,11 +2,18 @@ name: main
 on: push
 jobs:
   main:
-    runs-on: windows-latest
+    runs-on: windows-2019
     strategy:
       matrix:
-        gcc-version: ["4.6.2-1", "4.7.2-1", "4.8.1-4", "4.9.3-1", "5.3.0-3", "6.3.0-1"]
-        qt-version: ["4.8.7"]
+        qt-version:
+        - 4.8.7
+        gcc-version:
+        - 4.6.2-1
+        - 4.7.2-1
+        - 4.8.1-4
+        - 4.9.3-1
+        - 5.3.0-3
+        - 6.3.0-1
       fail-fast: false
     steps:
     - uses: actions/checkout@v3
@@ -24,6 +31,7 @@ jobs:
         echo P7Z not found
         exit /b
         )
+        if exist "C:\Program Files\Git\mingw32\bin\curl.exe" set CURL=C:\Program Files\Git\mingw32\bin\curl.exe
         if exist "C:\Program Files\Git\mingw64\bin\curl.exe" set CURL=C:\Program Files\Git\mingw64\bin\curl.exe
         if exist "C:\Windows\System32\curl.exe" set CURL=C:\Windows\System32\curl.exe
         if not defined CURL (
@@ -33,7 +41,7 @@ jobs:
         set PATH=%CD%\mingw\bin;C:\Strawberry\perl\bin;C:\windows\system32;C:\windows
         if not exist mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip "%CURL%" -L -o mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip https://netix.dl.sourceforge.net/project/mingw/Installer/mingw-get/mingw-get-0.6.2-beta-20131004-1/mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip
         if not exist mingw\bin\mingw-get.exe "%P7Z%" x -y -omingw mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip
-        mingw-get.exe install gdb mingw32-make "gcc-c++=${{ matrix.gcc-version }}"
+        if not exist "%CD%\mingw\bin\gcc.exe" mingw-get.exe install mingw32-make "gcc-c++=${{ gcc-version }}"
         g++ -v
         if exist "C:\Strawberry\perl\bin\perl.exe" set PERL=C:\Strawberry\perl\bin\perl.exe
         if not defined PERL (
@@ -45,10 +53,17 @@ jobs:
         echo MINGW not found
         exit /b
         )
-        if not exist qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip "%CURL%" -L -o qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip https://download.qt.io/archive/qt/4.8/${{ matrix.qt-version }}/qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip
-        if not exist qt-everywhere-opensource-src-${{ matrix.qt-version }} "%P7Z%" x -y qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip
-        pushd qt-everywhere-opensource-src-${{ matrix.qt-version }}
+        set qt_version=${{ qt-version }}
+        set maj_min=%qt_version:~0,3%
+        if "%maj_min%" equ "4.8" (
+        if not exist "qt-everywhere-opensource-src-${{ qt-version }}.zip" "%CURL%" -L -o "qt-everywhere-opensource-src-${{ qt-version }}.zip" "https://download.qt.io/archive/qt/%maj_min%/${{ qt-version }}/qt-everywhere-opensource-src-${{ qt-version }}.zip"
+        ) else (
+        if not exist "qt-everywhere-opensource-src-${{ qt-version }}.zip" "%CURL%" -L -o "qt-everywhere-opensource-src-${{ qt-version }}.zip" "https://download.qt.io/archive/qt/%maj_min%/qt-everywhere-opensource-src-${{ qt-version }}.zip"
+        )
+        if not exist "qt-everywhere-opensource-src-${{ qt-version }}" "%P7Z%" x -y "qt-everywhere-opensource-src-${{ qt-version }}.zip"
+        pushd qt-everywhere-opensource-src-${{ qt-version }}
         "%PATCH%" -N -p1 -i ..\0001-include-winerror.h.patch
-        call configure -prefix %CD%\..\Qt-${{ matrix.qt-version }} -opensource -confirm-license -shared -platform win32-g++ -opengl desktop -debug-and-release -nomake tests -nomake examples
+        "%PATCH%" -N -p1 -i ..\0001-lto-linker-option.patch
+        call configure -prefix %CD%\..\Qt-${{ qt-version }} -opensource -confirm-license -shared -platform win32-g++ -opengl desktop -debug-and-release -nomake tests -nomake examples
         mingw32-make
         popd

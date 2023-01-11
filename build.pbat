@@ -15,7 +15,8 @@ def main
     download(https://netix.dl.sourceforge.net/project/mingw/Installer/mingw-get/mingw-get-0.6.2-beta-20131004-1/mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip, mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip)
     unzip(mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip, mingw\bin\mingw-get.exe, :o = mingw)
 
-    mingw-get.exe install mingw32-make "gcc-c++=${{ gcc-version }}"
+    if not exist "%CD%\mingw\bin\gcc.exe" mingw-get.exe install mingw32-make "gcc-c++=${{ gcc-version }}"
+
     g++ -v
 
     PERL = find_app([C:\Strawberry\perl\bin\perl.exe])
@@ -23,14 +24,27 @@ def main
     
     # To reconfigure, run mingw32-make confclean and configure.
 
-    download(https://download.qt.io/archive/qt/4.8/${{ qt-version }}/qt-everywhere-opensource-src-${{ qt-version }}.zip, qt-everywhere-opensource-src-${{ qt-version }}.zip)
+    set qt_version=${{ qt-version }}
+    maj_min = substr(qt_version, 0, 3)
+
+    # https://download.qt.io/archive/qt/4.7/qt-everywhere-opensource-src-4.7.4.zip
+
+    if "%maj_min%" equ "4.8" (
+        download(https://download.qt.io/archive/qt/%maj_min%/${{ qt-version }}/qt-everywhere-opensource-src-${{ qt-version }}.zip, qt-everywhere-opensource-src-${{ qt-version }}.zip)
+    ) else (
+        download(https://download.qt.io/archive/qt/%maj_min%/qt-everywhere-opensource-src-${{ qt-version }}.zip, qt-everywhere-opensource-src-${{ qt-version }}.zip)
+    )
+
     unzip(qt-everywhere-opensource-src-${{ qt-version }}.zip, qt-everywhere-opensource-src-${{ qt-version }})
 
     pushd qt-everywhere-opensource-src-${{ qt-version }}
         patch(..\0001-include-winerror.h.patch, :N, :p=1)
+        patch(..\0001-lto-linker-option.patch, :N, :p=1)
+        #mingw32-make confclean
         call configure -prefix %CD%\..\Qt-${{ qt-version }} -opensource -confirm-license -shared -platform win32-g++ -opengl desktop -debug-and-release -nomake tests -nomake examples
         mingw32-make
     popd
     popd_cd()
-        
+
 github_workflow 1
+github_image windows-2019
