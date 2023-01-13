@@ -26,7 +26,7 @@ if not defined PERL (
 echo PERL not found
 exit /b
 )
-if exist "%CD%\mingw\bin\gcc.exe" set MINGW=%CD%\mingw\bin\gcc.exe
+if exist "%CD%\mingw32\bin\gcc.exe" set MINGW=%CD%\mingw32\bin\gcc.exe
 if not defined MINGW (
 echo MINGW not found
 exit /b

@@ -20,7 +20,7 @@ def main
     unzip(i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z, mingw32)
 
     PERL = find_app([C:\Strawberry\perl\bin\perl.exe])
-    MINGW = find_app([%CD%\mingw\bin\gcc.exe])
+    MINGW = find_app([%CD%\mingw32\bin\gcc.exe])
     #SED = find_app([C:\Program Files\Git\usr\bin\sed.exe, C:\msys64\usr\bin\sed.exe])
 
     g++ -v
