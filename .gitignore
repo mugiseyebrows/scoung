@@ -1,4 +1,7 @@
 *.zip
+*.7z
 mingw/
+mingw32/
 Qt-4.8.7/
 qt-everywhere-opensource-src-4.8.7/
+mysql-5.5.62-win32/

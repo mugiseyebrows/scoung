@@ -18,11 +18,9 @@ echo CURL not found
 exit /b
 )
 pushd %~dp0
-set PATH=%CD%\mingw\bin;C:\Strawberry\perl\bin;C:\windows\system32;C:\windows
-if not exist mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip "%CURL%" -L -o mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip https://netix.dl.sourceforge.net/project/mingw/Installer/mingw-get/mingw-get-0.6.2-beta-20131004-1/mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip
-if not exist mingw\bin\mingw-get.exe "%P7Z%" x -y -omingw mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip
-if not exist "%CD%\mingw\bin\gcc.exe" mingw-get.exe install mingw32-make "gcc-c++=4.6.2-1"
-g++ -v
+set PATH=%CD%\mingw32\bin;%CD%\Qt-4.8.7\bin;C:\Strawberry\perl\bin;C:\windows\system32;C:\windows
+if not exist i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z "%CURL%" -L -o i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z "https://netix.dl.sourceforge.net/project/mingw-w64/Toolchains%%20targetting%%20Win32/Personal%%20Builds/mingw-builds/5.4.0/threads-win32/dwarf/i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z"
+if not exist mingw32 "%P7Z%" x -y i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z
 if exist "C:\Strawberry\perl\bin\perl.exe" set PERL=C:\Strawberry\perl\bin\perl.exe
 if not defined PERL (
 echo PERL not found
@@ -33,6 +31,7 @@ if not defined MINGW (
 echo MINGW not found
 exit /b
 )
+g++ -v
 set qt_version=4.8.7
 set maj_min=%qt_version:~0,3%
 if "%maj_min%" equ "4.8" (
@@ -41,12 +40,22 @@ if not exist "qt-everywhere-opensource-src-4.8.7.zip" "%CURL%" -L -o "qt-everywh
 if not exist "qt-everywhere-opensource-src-4.8.7.zip" "%CURL%" -L -o "qt-everywhere-opensource-src-4.8.7.zip" "https://download.qt.io/archive/qt/%maj_min%/qt-everywhere-opensource-src-4.8.7.zip"
 )
 if not exist "qt-everywhere-opensource-src-4.8.7" "%P7Z%" x -y "qt-everywhere-opensource-src-4.8.7.zip"
+if not exist mysql-5.5.62-win32.zip "%CURL%" -L -o mysql-5.5.62-win32.zip https://cdn.mysql.com/Downloads/MySQL-5.5/mysql-5.5.62-win32.zip
+if not exist mysql-5.5.62-win32 "%P7Z%" x -y mysql-5.5.62-win32.zip
+set MYSQL_INCLUDE=%CD%\mysql-5.5.62-win32\include
+set MYSQL_BIN=%CD%\mysql-5.5.62-win32\lib
+set mode=-release
+set prefix=%CD%\Qt-4.8.7
 pushd qt-everywhere-opensource-src-4.8.7
 "%PATCH%" -N -p1 -i ..\0001-include-winerror.h.patch
-"%PATCH%" -N -p1 -i ..\0001-lto-linker-option.patch
-call configure -prefix %CD%\..\Qt-4.8.7 -opensource -confirm-license -shared -platform win32-g++ -opengl desktop -debug-and-release -nomake tests -nomake examples
-mingw32-make
+"%PATCH%" -N -p1 -i ..\0001-fix-doc-script.patch
+call configure -prefix %prefix% -opensource -confirm-license -shared -platform win32-g++ -opengl desktop %mode% -nomake tests -nomake examples -no-webkit -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -l mysql
+if not exist "bin\sqldrivers" mkdir "bin\sqldrivers"
+copy /y plugins\sqldrivers\qsqlite4.dll bin\sqldrivers
+mingw32-make docs
+mingw32-make install
 popd
+if not exist "Qt-4.8.7.zip" "%P7Z%" a -y "Qt-4.8.7.zip" "Qt-4.8.7"
 popd
 
 
