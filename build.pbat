@@ -3,26 +3,23 @@ def main
     qt-version = github_matrix([4.8.7])
     #gcc-version = github_matrix([4.6.2-1, 4.7.2-1, 4.8.1-4, 4.9.3-1, 5.3.0-3, 6.3.0-1])
 
+    
     github_checkout()
     pushd_cd()
     set_path(
         %CD%\mingw32\bin,
-        %CD%\Qt-${{ matrix.qt-version }}\bin,
+        C:\Qt-${{ matrix.qt-version }}\bin,
         C:\Strawberry\perl\bin,
         C:\windows\system32,
         C:\windows
     )
 
-    #download(https://netix.dl.sourceforge.net/project/mingw/Installer/mingw-get/mingw-get-0.6.2-beta-20131004-1/mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip, mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip)
-    #unzip(mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip, mingw\bin\mingw-get.exe, :o = mingw)
-    #if not exist "%CD%\mingw\bin\gcc.exe" mingw-get.exe install mingw32-make "gcc-c++=${{ matrix.gcc-version }}"
     download("https://netix.dl.sourceforge.net/project/mingw-w64/Toolchains%%20targetting%%20Win32/Personal%%20Builds/mingw-builds/5.4.0/threads-win32/dwarf/i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z", i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z)
     unzip(i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z, mingw32)
 
     PERL = find_app([C:\Strawberry\perl\bin\perl.exe])
     MINGW = find_app([%CD%\mingw32\bin\gcc.exe])
-    #SED = find_app([C:\Program Files\Git\usr\bin\sed.exe, C:\msys64\usr\bin\sed.exe])
-
+    
     g++ -v
     
     set qt_version=${{ matrix.qt-version }}
@@ -49,27 +46,24 @@ def main
     
     set MYSQL_INCLUDE=%CD%\mysql-5.5.62-win32\include
     set MYSQL_BIN=%CD%\mysql-5.5.62-win32\lib
-    # set OPENSSL_INCLUDE=%CD%\OpenSSL\include
-    # set OPENSSL_BIN=%CD%\OpenSSL\bin
-    # -I %OPENSSL_INCLUDE% -L %OPENSSL_BIN% -openssl-linked
-
+    
     set mode=-debug-and-release
     #set mode=-release
-    set prefix=%CD%\Qt-${{ matrix.qt-version }}
+    
     set exclude=-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-scripttools -no-script -nomake tests -nomake examples
-
+    #rmdir(C:\Qt-${{ matrix.qt-version }})
     pushd qt-everywhere-opensource-src-${{ matrix.qt-version }}
         patch(..\0001-include-winerror.h.patch, :N, :p=1)
         patch(..\0001-fix-doc-script.patch, :N, :p=1)
         #mingw32-make confclean
-        call configure -prefix %prefix% -opensource -confirm-license -shared -platform win32-g++ -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -l mysql
+        call configure -prefix C:\Qt-${{ matrix.qt-version }} -opensource -confirm-license -shared -platform win32-g++ -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -l mysql
         mingw32-make -j4
         mkdir(bin\sqldrivers)
         copy_file(plugins\sqldrivers\qsqlite4.dll, bin\sqldrivers)
         mingw32-make docs
         mingw32-make install
     popd
-    zip(Qt-${{ matrix.qt-version }}, Qt-${{ matrix.qt-version }}.zip)
+    zip(C:\Qt-${{ matrix.qt-version }}, Qt-${{ matrix.qt-version }}.zip)
     popd_cd()
     github_upload(Qt-${{ matrix.qt-version }}.zip)
     github_release(Qt-${{ matrix.qt-version }}.zip)

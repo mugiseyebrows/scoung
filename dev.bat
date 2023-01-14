@@ -10,4 +10,3 @@ exit /b
 "%QTCREATOR%"
 popd
 
-
