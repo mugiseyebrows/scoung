@@ -44,12 +44,14 @@ if not exist mysql-5.5.62-win32.zip "%CURL%" -L -o mysql-5.5.62-win32.zip https:
 if not exist mysql-5.5.62-win32 "%P7Z%" x -y mysql-5.5.62-win32.zip
 set MYSQL_INCLUDE=%CD%\mysql-5.5.62-win32\include
 set MYSQL_BIN=%CD%\mysql-5.5.62-win32\lib
-set mode=-release
+set mode=-debug-and-release
 set prefix=%CD%\Qt-4.8.7
+set exclude=-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-scripttools -no-script -nomake tests -nomake examples
 pushd qt-everywhere-opensource-src-4.8.7
 "%PATCH%" -N -p1 -i ..\0001-include-winerror.h.patch
 "%PATCH%" -N -p1 -i ..\0001-fix-doc-script.patch
-call configure -prefix %prefix% -opensource -confirm-license -shared -platform win32-g++ -opengl desktop %mode% -nomake tests -nomake examples -no-webkit -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -l mysql
+call configure -prefix %prefix% -opensource -confirm-license -shared -platform win32-g++ -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -l mysql
+mingw32-make -j4
 if not exist "bin\sqldrivers" mkdir "bin\sqldrivers"
 copy /y plugins\sqldrivers\qsqlite4.dll bin\sqldrivers
 mingw32-make docs

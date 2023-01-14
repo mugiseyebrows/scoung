@@ -53,26 +53,26 @@ def main
     # set OPENSSL_BIN=%CD%\OpenSSL\bin
     # -I %OPENSSL_INCLUDE% -L %OPENSSL_BIN% -openssl-linked
 
-    #set mode=-debug-and-release
-    set mode=-release
+    set mode=-debug-and-release
+    #set mode=-release
     set prefix=%CD%\Qt-${{ matrix.qt-version }}
+    set exclude=-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-scripttools -no-script -nomake tests -nomake examples
 
     pushd qt-everywhere-opensource-src-${{ matrix.qt-version }}
         patch(..\0001-include-winerror.h.patch, :N, :p=1)
         patch(..\0001-fix-doc-script.patch, :N, :p=1)
         #mingw32-make confclean
-        call configure -prefix %prefix% -opensource -confirm-license -shared -platform win32-g++ -opengl desktop %mode% -nomake tests -nomake examples -no-webkit -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -l mysql
-        #"%SED%" -i "s,\\\\\\\\s \\\\\\\\q \\\\\\\\y \\\\\\\\i,/s /q /y /i,g" Makefile
-        #"%SED%" -i "s,copy \\\\\\\\y ,copy /y ,g" Makefile
-        #mingw32-make
+        call configure -prefix %prefix% -opensource -confirm-license -shared -platform win32-g++ -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -l mysql
+        mingw32-make -j4
         mkdir(bin\sqldrivers)
         copy_file(plugins\sqldrivers\qsqlite4.dll, bin\sqldrivers)
         mingw32-make docs
         mingw32-make install
     popd
     zip(Qt-${{ matrix.qt-version }}, Qt-${{ matrix.qt-version }}.zip)
-    github_upload(Qt-${{ matrix.qt-version }}.zip)
     popd_cd()
+    github_upload(Qt-${{ matrix.qt-version }}.zip)
+    github_release(Qt-${{ matrix.qt-version }}.zip)
 
 github_workflow 1
 github_image windows-2019
