@@ -3,7 +3,6 @@ def main
     qt-version = github_matrix([4.8.7])
     #gcc-version = github_matrix([4.6.2-1, 4.7.2-1, 4.8.1-4, 4.9.3-1, 5.3.0-3, 6.3.0-1])
 
-    
     github_checkout()
     pushd_cd()
     set_path(
@@ -40,33 +39,30 @@ def main
     #download(https://github.com/mugiseyebrows/build-openssl/releases/download/1.1.1n/OpenSSL-1.1.1n-i686.zip, OpenSSL-1.1.1n-i686.zip)
     #unzip(OpenSSL-1.1.1n-i686.zip, OpenSSL)
 
-    #set OPENSSL_LIBS=-L%CD%/OpenSSL -lssl -lcrypto
-    #set OPENSSL_LIBS=-L%CD%/OpenSSL -lssl -lcrypto
-    #set OPENSSL_LIBS=-lcrypto-1_1 -lssl-1_1
-    
     set MYSQL_INCLUDE=%CD%\mysql-5.5.62-win32\include
     set MYSQL_BIN=%CD%\mysql-5.5.62-win32\lib
     
     set mode=-debug-and-release
     #set mode=-release
-    
+
     set exclude=-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-scripttools -no-script -nomake tests -nomake examples
     #rmdir(C:\Qt-${{ matrix.qt-version }})
     pushd qt-everywhere-opensource-src-${{ matrix.qt-version }}
-        patch(..\0001-include-winerror.h.patch, :N, :p=1)
+        #patch(..\0001-include-winerror.h.patch, :N, :p=1)
         patch(..\0001-fix-doc-script.patch, :N, :p=1)
+        patch(..\0001-add-mysql-to-LIBS.patch, :N, :p=1)
         #mingw32-make confclean
-        call configure -prefix C:\Qt-${{ matrix.qt-version }} -opensource -confirm-license -shared -platform win32-g++ -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -l mysql
+        call configure -prefix C:\Qt-${{ matrix.qt-version }} -opensource -confirm-license -shared -platform win32-g++ -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN%
         mingw32-make -j4
         mkdir(bin\sqldrivers)
         copy_file(plugins\sqldrivers\qsqlite4.dll, bin\sqldrivers)
         mingw32-make docs
         mingw32-make install
     popd
-    zip(C:\Qt-${{ matrix.qt-version }}, Qt-${{ matrix.qt-version }}.zip)
+    zip(C:\Qt-${{ matrix.qt-version }}, Qt-${{ matrix.qt-version }}.7z, :ultra)
+    github_upload(Qt-${{ matrix.qt-version }}.7z)
+    github_release(Qt-${{ matrix.qt-version }}.7z)
     popd_cd()
-    github_upload(Qt-${{ matrix.qt-version }}.zip)
-    github_release(Qt-${{ matrix.qt-version }}.zip)
 
 github_workflow 1
 github_image windows-2019

@@ -35,9 +35,9 @@ g++ -v
 set qt_version=4.8.7
 set maj_min=%qt_version:~0,3%
 if "%maj_min%" equ "4.8" (
-if not exist "qt-everywhere-opensource-src-4.8.7.zip" "%CURL%" -L -o "qt-everywhere-opensource-src-4.8.7.zip" "https://download.qt.io/archive/qt/%maj_min%/4.8.7/qt-everywhere-opensource-src-4.8.7.zip"
+    if not exist "qt-everywhere-opensource-src-4.8.7.zip" "%CURL%" -L -o "qt-everywhere-opensource-src-4.8.7.zip" "https://download.qt.io/archive/qt/%maj_min%/4.8.7/qt-everywhere-opensource-src-4.8.7.zip"
 ) else (
-if not exist "qt-everywhere-opensource-src-4.8.7.zip" "%CURL%" -L -o "qt-everywhere-opensource-src-4.8.7.zip" "https://download.qt.io/archive/qt/%maj_min%/qt-everywhere-opensource-src-4.8.7.zip"
+    if not exist "qt-everywhere-opensource-src-4.8.7.zip" "%CURL%" -L -o "qt-everywhere-opensource-src-4.8.7.zip" "https://download.qt.io/archive/qt/%maj_min%/qt-everywhere-opensource-src-4.8.7.zip"
 )
 if not exist "qt-everywhere-opensource-src-4.8.7" "%P7Z%" x -y "qt-everywhere-opensource-src-4.8.7.zip"
 if not exist mysql-5.5.62-win32.zip "%CURL%" -L -o mysql-5.5.62-win32.zip https://cdn.mysql.com/Downloads/MySQL-5.5/mysql-5.5.62-win32.zip
@@ -47,15 +47,14 @@ set MYSQL_BIN=%CD%\mysql-5.5.62-win32\lib
 set mode=-debug-and-release
 set exclude=-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-scripttools -no-script -nomake tests -nomake examples
 pushd qt-everywhere-opensource-src-4.8.7
-"%PATCH%" -N -p1 -i ..\0001-include-winerror.h.patch
-"%PATCH%" -N -p1 -i ..\0001-fix-doc-script.patch
-call configure -prefix C:\Qt-4.8.7 -opensource -confirm-license -shared -platform win32-g++ -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -l mysql
-mingw32-make -j4
-if not exist "bin\sqldrivers" mkdir "bin\sqldrivers"
-copy /y plugins\sqldrivers\qsqlite4.dll bin\sqldrivers
-mingw32-make docs
-mingw32-make install
+    "%PATCH%" -N -p1 -i ..\0001-fix-doc-script.patch
+    "%PATCH%" -N -p1 -i ..\0001-add-mysql-to-LIBS.patch
+    call configure -prefix C:\Qt-4.8.7 -opensource -confirm-license -shared -platform win32-g++ -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN%
+    mingw32-make -j4
+    if not exist "bin\sqldrivers" mkdir "bin\sqldrivers"
+    copy /y plugins\sqldrivers\qsqlite4.dll bin\sqldrivers
+    mingw32-make docs
+    mingw32-make install
 popd
-if not exist "Qt-4.8.7.zip" "%P7Z%" a -y "Qt-4.8.7.zip" "C:\Qt-4.8.7"
+if not exist "Qt-4.8.7.7z" "%P7Z%" a -y -mx9 "Qt-4.8.7.7z" "C:\Qt-4.8.7"
 popd
-
