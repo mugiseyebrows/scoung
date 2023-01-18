@@ -44,7 +44,7 @@ def main
     
     set mode=-debug-and-release
     #set mode=-release
-
+    
     set exclude=-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-scripttools -no-script -nomake tests -nomake examples
     #rmdir(C:\Qt-${{ matrix.qt-version }})
     pushd qt-everywhere-opensource-src-${{ matrix.qt-version }}
@@ -52,7 +52,7 @@ def main
         patch(..\0001-fix-doc-script.patch, :N, :p=1)
         patch(..\0001-add-mysql-to-LIBS.patch, :N, :p=1)
         #mingw32-make confclean
-        call configure -prefix C:\Qt-${{ matrix.qt-version }} -opensource -confirm-license -shared -platform win32-g++ -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN%
+        call configure -prefix C:\Qt-${{ matrix.qt-version }} -opensource -developer-build -confirm-license -shared -platform win32-g++ -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN%
         mingw32-make -j4
         mkdir(bin\sqldrivers)
         copy_file(plugins\sqldrivers\qsqlite4.dll, bin\sqldrivers)

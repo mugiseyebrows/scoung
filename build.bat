@@ -49,7 +49,7 @@ set exclude=-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-script
 pushd qt-everywhere-opensource-src-4.8.7
     "%PATCH%" -N -p1 -i ..\0001-fix-doc-script.patch
     "%PATCH%" -N -p1 -i ..\0001-add-mysql-to-LIBS.patch
-    call configure -prefix C:\Qt-4.8.7 -opensource -confirm-license -shared -platform win32-g++ -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN%
+    call configure -prefix C:\Qt-4.8.7 -opensource -developer-build -confirm-license -shared -platform win32-g++ -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN%
     mingw32-make -j4
     if not exist "bin\sqldrivers" mkdir "bin\sqldrivers"
     copy /y plugins\sqldrivers\qsqlite4.dll bin\sqldrivers
