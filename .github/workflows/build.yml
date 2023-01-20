@@ -68,9 +68,9 @@ jobs:
             copy /y plugins\sqldrivers\qsqlite4.dll bin\sqldrivers
             mingw32-make docs
             mingw32-make install
-            copy /y ..\mingw32\bin\libstdc++-6.dll "C:\Qt-${{ matrix.qt-version }}\bin"
-            copy /y ..\mingw32\bin\libgcc_s_dw2-1.dll "C:\Qt-${{ matrix.qt-version }}\bin"
         popd
+        copy /y "mingw32\bin\libstdc++-6.dll" "C:\Qt-${{ matrix.qt-version }}\bin"
+        copy /y mingw32\bin\libgcc_s_dw2-1.dll "C:\Qt-${{ matrix.qt-version }}\bin"
         if not exist "Qt-${{ matrix.qt-version }}.7z" "%P7Z%" a -y -mx9 "Qt-${{ matrix.qt-version }}.7z" "C:\Qt-${{ matrix.qt-version }}"
     - name: upload
       uses: actions/upload-artifact@v3

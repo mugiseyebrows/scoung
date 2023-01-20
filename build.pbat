@@ -58,10 +58,11 @@ def main
         copy_file(plugins\sqldrivers\qsqlite4.dll, bin\sqldrivers)
         mingw32-make docs
         mingw32-make install
-        # mugideploy list --bin C:\Qt-4.8.7\bin\qmake.exe
-        copy_file(..\mingw32\bin\libstdc++-6.dll, C:\Qt-${{ matrix.qt-version }}\bin)
-        copy_file(..\mingw32\bin\libgcc_s_dw2-1.dll, C:\Qt-${{ matrix.qt-version }}\bin)
     popd
+    # mugideploy list --bin C:\Qt-4.8.7\bin\qmake.exe
+    copy_file(mingw32\bin\libstdc++-6.dll, C:\Qt-${{ matrix.qt-version }}\bin)
+    copy_file(mingw32\bin\libgcc_s_dw2-1.dll, C:\Qt-${{ matrix.qt-version }}\bin)
+    # zip
     zip(C:\Qt-${{ matrix.qt-version }}, Qt-${{ matrix.qt-version }}.7z, :ultra)
     github_upload(Qt-${{ matrix.qt-version }}.7z)
     github_release(Qt-${{ matrix.qt-version }}.7z)

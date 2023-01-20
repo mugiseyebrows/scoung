@@ -55,8 +55,8 @@ pushd qt-everywhere-opensource-src-4.8.7
     copy /y plugins\sqldrivers\qsqlite4.dll bin\sqldrivers
     mingw32-make docs
     mingw32-make install
-    copy /y ..\mingw32\bin\libstdc++-6.dll "C:\Qt-4.8.7\bin"
-    copy /y ..\mingw32\bin\libgcc_s_dw2-1.dll "C:\Qt-4.8.7\bin"
 popd
+copy /y "mingw32\bin\libstdc++-6.dll" "C:\Qt-4.8.7\bin"
+copy /y mingw32\bin\libgcc_s_dw2-1.dll "C:\Qt-4.8.7\bin"
 if not exist "Qt-4.8.7.7z" "%P7Z%" a -y -mx9 "Qt-4.8.7.7z" "C:\Qt-4.8.7"
 popd
