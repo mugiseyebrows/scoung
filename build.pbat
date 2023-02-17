@@ -9,8 +9,7 @@ def main
         %CD%\mingw32\bin,
         C:\Qt-${{ matrix.qt-version }}\bin,
         C:\Strawberry\perl\bin,
-        C:\windows\system32,
-        C:\windows
+        %PATH%
     )
 
     download("https://netix.dl.sourceforge.net/project/mingw-w64/Toolchains%%20targetting%%20Win32/Personal%%20Builds/mingw-builds/5.4.0/threads-win32/dwarf/i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z", i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z)
@@ -41,6 +40,13 @@ def main
 
     set MYSQL_INCLUDE=%CD%\mysql-5.5.62-win32\include
     set MYSQL_BIN=%CD%\mysql-5.5.62-win32\lib
+
+    download(https://github.com/mugiseyebrows/drenor/releases/download/OpenSSL_1_0_1m/OpenSSL_1_0_1m.zip, OpenSSL_1_0_1m.zip)
+    unzip(OpenSSL_1_0_1m.zip, OpenSSL)
+    
+    set OPENSSL_BIN=%CD%\OpenSSL\bin
+    set OPENSSL_INCLUDE=%CD%\OpenSSL\include
+    set OPENSSL_MODE=-openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32"
     
     set mode=-debug-and-release
     #set mode=-release
@@ -52,7 +58,7 @@ def main
         patch(..\0001-fix-doc-script.patch, :N, :p=1)
         patch(..\0001-add-mysql-to-LIBS.patch, :N, :p=1)
         #mingw32-make confclean
-        call configure -prefix C:\Qt-${{ matrix.qt-version }} -opensource -developer-build -confirm-license -shared -platform win32-g++ -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN%
+        call configure -prefix C:\Qt-${{ matrix.qt-version }} -opensource -developer-build -confirm-license -shared -platform win32-g++ %OPENSSL_MODE% -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -I %OPENSSL_INCLUDE% -L %OPENSSL_BIN%
         mingw32-make -j4
         mkdir(bin\sqldrivers)
         copy_file(plugins\sqldrivers\qsqlite4.dll, bin\sqldrivers)
