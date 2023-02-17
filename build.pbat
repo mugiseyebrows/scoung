@@ -9,6 +9,7 @@ def main
         %CD%\mingw32\bin,
         C:\Qt-${{ matrix.qt-version }}\bin,
         C:\Strawberry\perl\bin,
+        %CD%\OpenSSL\bin,
         %PATH%
     )
 
@@ -68,6 +69,9 @@ def main
     # mugideploy list --bin C:\Qt-4.8.7\bin\qmake.exe
     copy_file(mingw32\bin\libstdc++-6.dll, C:\Qt-${{ matrix.qt-version }}\bin)
     copy_file(mingw32\bin\libgcc_s_dw2-1.dll, C:\Qt-${{ matrix.qt-version }}\bin)
+    # mugideploy list --bin C:\Qt-4.8.7\bin\QtNetwork4.dll
+    copy_file(OpenSSL\bin\libeay32.dll, C:\Qt-${{ matrix.qt-version }}\bin)
+    copy_file(OpenSSL\bin\ssleay32.dll, C:\Qt-${{ matrix.qt-version }}\bin)
     # zip
     zip(C:\Qt-${{ matrix.qt-version }}, Qt-${{ matrix.qt-version }}.7z, :ultra)
     github_upload(Qt-${{ matrix.qt-version }}.7z)

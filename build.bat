@@ -18,7 +18,7 @@ echo CURL not found
 exit /b
 )
 pushd %~dp0
-set PATH=%CD%\mingw32\bin;C:\Qt-4.8.7\bin;C:\Strawberry\perl\bin;%PATH%
+set PATH=%CD%\mingw32\bin;C:\Qt-4.8.7\bin;C:\Strawberry\perl\bin;%CD%\OpenSSL\bin;%PATH%
 if not exist i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z "%CURL%" -L -o i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z "https://netix.dl.sourceforge.net/project/mingw-w64/Toolchains%%20targetting%%20Win32/Personal%%20Builds/mingw-builds/5.4.0/threads-win32/dwarf/i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z"
 if not exist mingw32 "%P7Z%" x -y i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z
 if exist "C:\Strawberry\perl\bin\perl.exe" set PERL=C:\Strawberry\perl\bin\perl.exe
@@ -63,5 +63,7 @@ pushd qt-everywhere-opensource-src-4.8.7
 popd
 copy /y "mingw32\bin\libstdc++-6.dll" "C:\Qt-4.8.7\bin"
 copy /y mingw32\bin\libgcc_s_dw2-1.dll "C:\Qt-4.8.7\bin"
+copy /y OpenSSL\bin\libeay32.dll "C:\Qt-4.8.7\bin"
+copy /y OpenSSL\bin\ssleay32.dll "C:\Qt-4.8.7\bin"
 if not exist "Qt-4.8.7.7z" "%P7Z%" a -y -mx9 "Qt-4.8.7.7z" "C:\Qt-4.8.7"
 popd
