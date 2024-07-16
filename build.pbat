@@ -1,8 +1,8 @@
 def toolchain
     use(conda)
-    github_cache(C:\Qt\5.15.2\mingw81_64, :k=Qt-5.15.2-mingw81_64)
-    github_cache(C:\Qt\Tools\mingw810_64, :k=mingw810_64)
-    if_exist_return(C:\Qt\5.15.2\mingw81_64\bin\qmake.exe)
+    #github_cache(C:\Qt\5.15.2\mingw81_64, :k=Qt-5.15.2-mingw81_64)
+    #github_cache(C:\Qt\Tools\mingw810_64, :k=mingw810_64)
+    #if_exist_return(C:\Qt\5.15.2\mingw81_64\bin\qmake.exe)
     pip install aqtinstall
     aqt install-qt windows desktop 5.15.2 win64_mingw81 -O C:\Qt
     aqt install-tool windows desktop tools_mingw qt.tools.win64_mingw810 -O C:\Qt

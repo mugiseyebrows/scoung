@@ -8,11 +8,9 @@ if not defined CURL (
 echo CURL not found
 exit /b
 )
-if exist C:\Qt\5.15.2\mingw81_64\bin\qmake.exe goto toolchain_end
 pip install aqtinstall
 aqt install-qt windows desktop 5.15.2 win64_mingw81 -O C:\Qt
 aqt install-tool windows desktop tools_mingw qt.tools.win64_mingw810 -O C:\Qt
-:toolchain_end
 if exist C:\mysql-8.2.0-winx64\bin\mysql.exe goto mysql820_end
 pushd %~dp0
     if not exist mysql-8.2.0-winx64.zip "%CURL%" -L -o mysql-8.2.0-winx64.zip https://cdn.mysql.com/Downloads/MySQL-8.2/mysql-8.2.0-winx64.zip
