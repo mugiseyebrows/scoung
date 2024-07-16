@@ -24,8 +24,10 @@ if not exist qtbase-everywhere-src-5.15.2.zip "%CURL%" -L -o qtbase-everywhere-s
 if not exist qtbase-everywhere-src-5.15.2 7z x -y qtbase-everywhere-src-5.15.2.zip
 pushd qtbase-everywhere-src-5.15.2\src\plugins\sqldrivers
     qmake -- MYSQL_INCDIR="C:/mysql-8.2.0-winx64/include" MYSQL_LIBDIR="C:/mysql-8.2.0-winx64/lib"
-    mingw32-make sub-mysql -j4
-    mingw32-make install
+    pushd mysql
+        mingw32-make -j4
+        mingw32-make install
+    popd 
     copy /y C:\mysql-8.0.33-winx64\bin\libmysql.dll C:\Qt\5.15.2\mingw81_64\bin
     copy /y C:\mysql-8.0.33-winx64\bin\libssl-1_1-x64.dll C:\Qt\5.15.2\mingw81_64\bin
     copy /y C:\mysql-8.0.33-winx64\bin\libcrypto-1_1-x64.dll C:\Qt\5.15.2\mingw81_64\bin
