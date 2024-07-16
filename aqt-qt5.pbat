@@ -1,0 +1,46 @@
+def toolchain
+    use(conda)
+    pip install aqtinstall
+    aqt install-qt windows desktop 5.15.2 win64_mingw81 -O C:\Qt
+    aqt install-tool windows desktop tools_mingw qt.tools.win64_mingw810 -O C:\Qt
+
+def mysql820
+    github_cache(C:\mysql-8.2.0-winx64, :k=mysql-8.2.0-winx64)
+    add_path(C:\mysql-8.2.0-winx64\bin)
+    add_path(C:\mysql-8.2.0-winx64\lib)
+    if_exist_return(C:\mysql-8.2.0-winx64\bin\mysql.exe)
+    pushd_cd()
+        download(https://cdn.mysql.com/Downloads/MySQL-8.2/mysql-8.2.0-winx64.zip, :cache)
+        unzip(mysql-8.2.0-winx64.zip, :o=C:\)
+    popd
+
+def qsqlmysql5152 depends on toolchain and mysql820
+    #rmdir(C:\Program Files\PostgreSQL, :github)
+    #rmdir(C:\Program Files\MySQL, :github)
+    #rmdir(C:\Program Files\OpenSSL, :github)
+    #rmdir(C:\Strawberry, :github)
+    #rmdir(C:\tools\php, :github)
+    use(mingw, 8.1.0)
+    use(qt, 5.15.2)
+    add_path(C:\mysql-8.2.0-winx64\bin)
+    add_path(C:\mysql-8.2.0-winx64\lib)
+    github_cache(qtbase-everywhere-src-5.15.2.zip, :k=qtbase-everywhere-src-5.15.2.zip)
+    download(https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.zip, :cache)
+    echo unzip
+    unzip(qtbase-everywhere-src-5.15.2.zip, :t=qtbase-everywhere-src-5.15.2)
+    pushd qtbase-everywhere-src-5.15.2\src\plugins\sqldrivers
+        qmake -- MYSQL_INCDIR="C:/mysql-8.2.0-winx64/include" MYSQL_LIBDIR="C:/mysql-8.2.0-winx64/lib"
+        mingw32-make -j4 sub-mysql
+        pushd mysql
+            mingw32-make install
+        popd
+    popd
+    copy(C:\mysql-8.2.0-winx64\lib\libmysql.dll, C:\Qt\5.15.2\mingw81_64\bin)
+    copy(C:\mysql-8.2.0-winx64\bin\libssl-3-x64.dll, C:\Qt\5.15.2\mingw81_64\bin)
+    copy(C:\mysql-8.2.0-winx64\bin\libcrypto-3-x64.dll, C:\Qt\5.15.2\mingw81_64\bin)
+
+def main depends on qsqlmysql5152
+    zip(Qt-5.15.2.7z, C:\Qt\5.15.2\mingw81_64)
+    github_release(Qt-5.15.2.7z)
+
+github_workflow 1
