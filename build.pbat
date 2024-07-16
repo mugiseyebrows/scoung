@@ -4,7 +4,7 @@ def toolchain
     if_exist_return(C:\Qt\5.15.2\mingw81_64\bin\qmake.exe)
     pip install aqtinstall
     aqt install-qt windows desktop 5.15.2 win64_mingw81 -O C:\Qt
-    aqt install-tool windows desktop tools_qtcreator qt.tools.qtcreator -O C:\Qt
+    #aqt install-tool windows desktop tools_qtcreator qt.tools.qtcreator -O C:\Qt
     aqt install-tool windows desktop tools_mingw qt.tools.win64_mingw810 -O C:\Qt
 
 def mysql820
@@ -43,7 +43,7 @@ def qsqlmysql5152 depends on toolchain and mysql820
         #copy(C:\mysql-8.0.33-winx64\bin\libcrypto-1_1-x64.dll, C:\Qt\5.15.2\mingw81_64\bin)
     popd
 
-def main depends on qsqlmysql5152
+def main depends on toolchain
     
     #zip(Qt-5.15.2.zip, C:\Qt\5.15.2)
     #zip(QtCreator.zip, C:\Qt\Tools\QtCreator)
