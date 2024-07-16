@@ -4,11 +4,16 @@ jobs:
   main:
     runs-on: windows-latest
     steps:
-    - name: cache C:\Qt
+    - name: cache C:\Qt\5.15.2\mingw81_64
       uses: actions/cache@v4
       with:
-        path: C:\Qt
-        key: qt5
+        path: C:\Qt\5.15.2\mingw81_64
+        key: Qt-5.15.2
+    - name: cache C:\Qt\Tools\mingw810_64
+      uses: actions/cache@v4
+      with:
+        path: C:\Qt\Tools\mingw810_64
+        key: mingw810_64
     - name: cache C:\mysql-8.2.0-winx64
       uses: actions/cache@v4
       with:
