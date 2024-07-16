@@ -41,21 +41,23 @@ jobs:
         :mysql820_end
     - name: qsqlmysql5152
       shell: cmd
-      run: "set PATH=C:\\Miniconda3;C:\\Miniconda3\\Scripts;%USERPROFILE%\\Miniconda3;%USERPROFILE%\\\
-        Miniconda3\\Scripts;C:\\mysql-8.2.0-winx64\\bin;C:\\mysql-8.2.0-winx64\\lib;C:\\\
-        Program Files\\7-Zip;C:\\Qt\\Tools\\mingw810_64\\bin;C:\\Qt\\5.15.2\\mingw81_64\\\
-        bin;%PATH%\nrmdir /s /q \"C:\\Program Files\\PostgreSQL\" || echo 1 > NUL\n\
-        rmdir /s /q \"C:\\Program Files\\MySQL\" || echo 1 > NUL\nrmdir /s /q \"C:\\\
-        Program Files\\OpenSSL\" || echo 1 > NUL\nrmdir /s /q C:\\Strawberry || echo\
-        \ 1 > NUL\nrmdir /s /q C:\\tools\\php || echo 1 > NUL\nif not exist qtbase-everywhere-src-5.15.2.zip\
-        \ curl -L -o qtbase-everywhere-src-5.15.2.zip https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.zip\n\
-        if not exist qtbase-everywhere-src-5.15.2 7z x -y qtbase-everywhere-src-5.15.2.zip\n\
-        pushd qtbase-everywhere-src-5.15.2\\src\\plugins\\sqldrivers\n    qmake --\
-        \ MYSQL_INCDIR=\"C:/mysql-8.2.0-winx64/include\" MYSQL_LIBDIR=\"C:/mysql-8.2.0-winx64/lib\"\
-        \n    pushd mysql\n    popd \n    copy /y C:\\mysql-8.0.33-winx64\\bin\\libmysql.dll\
-        \ C:\\Qt\\5.15.2\\mingw81_64\\bin\n    copy /y C:\\mysql-8.0.33-winx64\\bin\\\
-        libssl-1_1-x64.dll C:\\Qt\\5.15.2\\mingw81_64\\bin\n    copy /y C:\\mysql-8.0.33-winx64\\\
-        bin\\libcrypto-1_1-x64.dll C:\\Qt\\5.15.2\\mingw81_64\\bin\npopd\n"
+      run: |
+        set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;C:\mysql-8.2.0-winx64\bin;C:\mysql-8.2.0-winx64\lib;C:\Program Files\7-Zip;C:\Qt\Tools\mingw810_64\bin;C:\Qt\5.15.2\mingw81_64\bin;%PATH%
+        where libmysql.dll
+        rmdir /s /q "C:\Program Files\PostgreSQL" || echo 1 > NUL
+        rmdir /s /q "C:\Program Files\MySQL" || echo 1 > NUL
+        rmdir /s /q "C:\Program Files\OpenSSL" || echo 1 > NUL
+        rmdir /s /q C:\Strawberry || echo 1 > NUL
+        rmdir /s /q C:\tools\php || echo 1 > NUL
+        if not exist qtbase-everywhere-src-5.15.2.zip curl -L -o qtbase-everywhere-src-5.15.2.zip https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.zip
+        if not exist qtbase-everywhere-src-5.15.2 7z x -y qtbase-everywhere-src-5.15.2.zip
+        pushd qtbase-everywhere-src-5.15.2\src\plugins\sqldrivers
+            qmake -- MYSQL_INCDIR="C:/mysql-8.2.0-winx64/include" MYSQL_LIBDIR="C:/mysql-8.2.0-winx64/lib"
+            mingw32-make -j4 sub-mysql
+            pushd mysql
+                mingw32-make install
+            popd
+        popd
     - name: main
       shell: cmd
       run: |
