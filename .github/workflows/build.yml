@@ -52,30 +52,11 @@ jobs:
         if not exist qtbase-everywhere-src-5.15.2 7z x -y qtbase-everywhere-src-5.15.2.zip\n\
         pushd qtbase-everywhere-src-5.15.2\\src\\plugins\\sqldrivers\n    qmake --\
         \ MYSQL_INCDIR=\"C:/mysql-8.2.0-winx64/include\" MYSQL_LIBDIR=\"C:/mysql-8.2.0-winx64/lib\"\
-        \n    pushd mysql\n        mingw32-make -j4\n        mingw32-make install\n\
-        \    popd \n    copy /y C:\\mysql-8.0.33-winx64\\bin\\libmysql.dll C:\\Qt\\\
-        5.15.2\\mingw81_64\\bin\n    copy /y C:\\mysql-8.0.33-winx64\\bin\\libssl-1_1-x64.dll\
+        \n    pushd mysql\n    popd \n    copy /y C:\\mysql-8.0.33-winx64\\bin\\libmysql.dll\
         \ C:\\Qt\\5.15.2\\mingw81_64\\bin\n    copy /y C:\\mysql-8.0.33-winx64\\bin\\\
-        libcrypto-1_1-x64.dll C:\\Qt\\5.15.2\\mingw81_64\\bin\npopd\n"
+        libssl-1_1-x64.dll C:\\Qt\\5.15.2\\mingw81_64\\bin\n    copy /y C:\\mysql-8.0.33-winx64\\\
+        bin\\libcrypto-1_1-x64.dll C:\\Qt\\5.15.2\\mingw81_64\\bin\npopd\n"
     - name: main
       shell: cmd
       run: |
         set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;C:\mysql-8.2.0-winx64\bin;C:\mysql-8.2.0-winx64\lib;C:\Program Files\7-Zip;C:\Qt\Tools\mingw810_64\bin;C:\Qt\5.15.2\mingw81_64\bin;%PATH%
-        7z a -y Qt-5.15.2.zip C:\Qt\5.15.2
-        7z a -y QtCreator.zip C:\Qt\Tools\QtCreator
-        7z a -y mingw810_64.zip C:\Qt\Tools\mingw810_64
-    - name: upload
-      uses: actions/upload-artifact@v4
-      with:
-        name: Qt-5.15.2
-        path: Qt-5.15.2.zip
-    - name: upload
-      uses: actions/upload-artifact@v4
-      with:
-        name: QtCreator
-        path: QtCreator.zip
-    - name: upload
-      uses: actions/upload-artifact@v4
-      with:
-        name: mingw810_64
-        path: mingw810_64.zip
