@@ -17,18 +17,6 @@ pushd %~dp0
     7z x -y -oC:\ mysql-8.2.0-winx64.zip
 popd
 :mysql820_end
-time /t
-echo rmdir PostgreSQL
-time /t
-echo rmdir MySQL
-time /t
-echo rmdir OpenSSL
-time /t
-echo rmdir Strawberry
-time /t
-echo rmdir php
-time /t
-echo download
 if not exist qtbase-everywhere-src-5.15.2.zip "%CURL%" -L -o qtbase-everywhere-src-5.15.2.zip https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.zip
 echo unzip
 if not exist qtbase-everywhere-src-5.15.2 7z x -y qtbase-everywhere-src-5.15.2.zip
@@ -38,8 +26,28 @@ pushd qtbase-everywhere-src-5.15.2\src\plugins\sqldrivers
     pushd mysql
         mingw32-make install
     popd
-    copy /y C:\mysql-8.2.0-winx64\bin\libmysql.dll C:\Qt\5.15.2\mingw81_64\bin
-    copy /y C:\mysql-8.2.0-winx64\bin\libssl-1_1-x64.dll C:\Qt\5.15.2\mingw81_64\bin
-    copy /y C:\mysql-8.2.0-winx64\bin\libcrypto-1_1-x64.dll C:\Qt\5.15.2\mingw81_64\bin
 popd
+if exist C:\mysql-8.2.0-winx64\bin\libmysql.dll (
+echo C:\mysql-8.2.0-winx64\bin\libmysql.dll exist
+) else (
+echo C:\mysql-8.2.0-winx64\bin\libmysql.dll not exist
+)
+if exist C:\mysql-8.2.0-winx64\bin\libssl-1_1-x64.dll (
+echo C:\mysql-8.2.0-winx64\bin\libssl-1_1-x64.dll exist
+) else (
+echo C:\mysql-8.2.0-winx64\bin\libssl-1_1-x64.dll not exist
+)
+if exist C:\mysql-8.2.0-winx64\bin\libcrypto-1_1-x64.dll (
+echo C:\mysql-8.2.0-winx64\bin\libcrypto-1_1-x64.dll exist
+) else (
+echo C:\mysql-8.2.0-winx64\bin\libcrypto-1_1-x64.dll not exist
+)
+if exist C:\Qt\5.15.2\mingw81_64\bin (
+echo C:\Qt\5.15.2\mingw81_64\bin exist
+) else (
+echo C:\Qt\5.15.2\mingw81_64\bin not exist
+)
+copy /y C:\mysql-8.2.0-winx64\bin\libmysql.dll C:\Qt\5.15.2\mingw81_64\bin
+copy /y C:\mysql-8.2.0-winx64\bin\libssl-1_1-x64.dll C:\Qt\5.15.2\mingw81_64\bin
+copy /y C:\mysql-8.2.0-winx64\bin\libcrypto-1_1-x64.dll C:\Qt\5.15.2\mingw81_64\bin
 7z a -y Qt-5.15.2-mingw81_64.zip C:\Qt\5.15.2\mingw81_64
