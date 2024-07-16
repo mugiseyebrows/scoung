@@ -9,6 +9,7 @@ echo CURL not found
 exit /b
 )
 if exist C:\Qt\5.15.2\mingw81_64\bin\qmake.exe goto toolchain_end
+pip install aqtinstall
 aqt install-qt windows desktop 5.15.2 win64_mingw81 -O C:\Qt
 aqt install-tool windows desktop tools_qtcreator qt.tools.qtcreator -O C:\Qt
 aqt install-tool windows desktop tools_mingw qt.tools.win64_mingw810 -O C:\Qt

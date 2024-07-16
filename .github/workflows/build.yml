@@ -19,6 +19,7 @@ jobs:
       run: |
         set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;C:\mysql-8.2.0-winx64\bin;C:\mysql-8.2.0-winx64\lib;C:\Program Files\7-Zip;C:\Qt\Tools\mingw810_64\bin;C:\Qt\5.15.2\mingw81_64\bin;%PATH%
         if exist C:\Qt\5.15.2\mingw81_64\bin\qmake.exe goto toolchain_end
+        pip install aqtinstall
         aqt install-qt windows desktop 5.15.2 win64_mingw81 -O C:\Qt
         aqt install-tool windows desktop tools_qtcreator qt.tools.qtcreator -O C:\Qt
         aqt install-tool windows desktop tools_mingw qt.tools.win64_mingw810 -O C:\Qt
