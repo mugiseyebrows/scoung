@@ -8,6 +8,7 @@ def toolchain
     aqt install-tool windows desktop tools_mingw qt.tools.win64_mingw810 -O C:\Qt
 
 def mysql820
+    github_cache(C:\mysql-8.2.0-winx64, :k=mysql-8.2.0-winx64)
     add_path(C:\mysql-8.2.0-winx64\bin)
     add_path(C:\mysql-8.2.0-winx64\lib)
     if_exist_return(C:\mysql-8.2.0-winx64\bin\mysql.exe)
@@ -29,7 +30,7 @@ def qsqlmysql5152 depends on toolchain and mysql820
     unzip(qtbase-everywhere-src-5.15.2.zip, :t=qtbase-everywhere-src-5.15.2)
     pushd qtbase-everywhere-src-5.15.2\src\plugins\sqldrivers
         qmake -- MYSQL_INCDIR="C:/mysql-8.2.0-winx64/include" MYSQL_LIBDIR="C:/mysql-8.2.0-winx64/lib"
-        mingw32-make -j4
+        mingw32-make sub-mysql -j4
         mingw32-make install
         copy(C:\mysql-8.0.33-winx64\bin\libmysql.dll, C:\Qt\5.15.2\mingw81_64\bin)
         copy(C:\mysql-8.0.33-winx64\bin\libssl-1_1-x64.dll, C:\Qt\5.15.2\mingw81_64\bin)
@@ -39,8 +40,8 @@ def qsqlmysql5152 depends on toolchain and mysql820
 def main depends on qsqlmysql5152
     
     zip(Qt-5.15.2.zip, C:\Qt\5.15.2)
-    zip(QtCreator.zip, C:\qt\Tools\QtCreator)
-    zip(mingw810_64.zip, C:\qt\Tools\mingw810_64)
+    zip(QtCreator.zip, C:\Qt\Tools\QtCreator)
+    zip(mingw810_64.zip, C:\Qt\Tools\mingw810_64)
 
     github_upload(Qt-5.15.2.zip)
     github_upload(QtCreator.zip)
