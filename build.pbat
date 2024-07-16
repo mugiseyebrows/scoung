@@ -18,17 +18,30 @@ def mysql820
     popd
 
 def qsqlmysql5152 depends on toolchain and mysql820
+    time /t
+    echo rmdir PostgreSQL
     rmdir(C:\Program Files\PostgreSQL, :github)
+    time /t
+    echo rmdir MySQL
     rmdir(C:\Program Files\MySQL, :github)
+    time /t
+    echo rmdir OpenSSL
     rmdir(C:\Program Files\OpenSSL, :github)
+    time /t
+    echo rmdir Strawberry
     rmdir(C:\Strawberry, :github)
+    time /t
+    echo rmdir php
     rmdir(C:\tools\php, :github)
+    time /t
     use(mingw, 8.1.0)
     use(qt, 5.15.2)
     add_path(C:\mysql-8.2.0-winx64\bin)
     add_path(C:\mysql-8.2.0-winx64\lib)
     github_cache(qtbase-everywhere-src-5.15.2.zip, :k=qtbase-everywhere-src-5.15.2.zip)
+    echo download
     download(https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.zip, :cache)
+    echo unzip
     unzip(qtbase-everywhere-src-5.15.2.zip, :t=qtbase-everywhere-src-5.15.2)
     pushd qtbase-everywhere-src-5.15.2\src\plugins\sqldrivers
         qmake -- MYSQL_INCDIR="C:/mysql-8.2.0-winx64/include" MYSQL_LIBDIR="C:/mysql-8.2.0-winx64/lib"

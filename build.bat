@@ -17,7 +17,20 @@ pushd %~dp0
     7z x -y -oC:\ mysql-8.2.0-winx64.zip
 popd
 :mysql820_end
+time /t
+echo rmdir PostgreSQL
+time /t
+echo rmdir MySQL
+time /t
+echo rmdir OpenSSL
+time /t
+echo rmdir Strawberry
+time /t
+echo rmdir php
+time /t
+echo download
 if not exist qtbase-everywhere-src-5.15.2.zip "%CURL%" -L -o qtbase-everywhere-src-5.15.2.zip https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.zip
+echo unzip
 if not exist qtbase-everywhere-src-5.15.2 7z x -y qtbase-everywhere-src-5.15.2.zip
 pushd qtbase-everywhere-src-5.15.2\src\plugins\sqldrivers
     qmake -- MYSQL_INCDIR="C:/mysql-8.2.0-winx64/include" MYSQL_LIBDIR="C:/mysql-8.2.0-winx64/lib"
