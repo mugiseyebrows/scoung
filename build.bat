@@ -14,19 +14,3 @@ aqt install-qt windows desktop 5.15.2 win64_mingw81 -O C:\Qt
 aqt install-tool windows desktop tools_qtcreator qt.tools.qtcreator -O C:\Qt
 aqt install-tool windows desktop tools_mingw qt.tools.win64_mingw810 -O C:\Qt
 :toolchain_end
-if exist C:\mysql-8.2.0-winx64\bin\mysql.exe goto mysql820_end
-pushd %~dp0
-    if not exist mysql-8.2.0-winx64.zip "%CURL%" -L -o mysql-8.2.0-winx64.zip https://cdn.mysql.com/Downloads/MySQL-8.2/mysql-8.2.0-winx64.zip
-    7z x -y -oC:\ mysql-8.2.0-winx64.zip
-popd
-:mysql820_end
-where libmysql.dll
-if not exist qtbase-everywhere-src-5.15.2.zip "%CURL%" -L -o qtbase-everywhere-src-5.15.2.zip https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.zip
-if not exist qtbase-everywhere-src-5.15.2 7z x -y qtbase-everywhere-src-5.15.2.zip
-pushd qtbase-everywhere-src-5.15.2\src\plugins\sqldrivers
-    qmake -- MYSQL_INCDIR="C:/mysql-8.2.0-winx64/include" MYSQL_LIBDIR="C:/mysql-8.2.0-winx64/lib"
-    mingw32-make -j4 sub-mysql
-    pushd mysql
-        mingw32-make install
-    popd
-popd

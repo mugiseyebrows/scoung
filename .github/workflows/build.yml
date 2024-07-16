@@ -29,35 +29,6 @@ jobs:
         aqt install-tool windows desktop tools_qtcreator qt.tools.qtcreator -O C:\Qt
         aqt install-tool windows desktop tools_mingw qt.tools.win64_mingw810 -O C:\Qt
         :toolchain_end
-    - name: mysql820
-      shell: cmd
-      run: |
-        set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;C:\mysql-8.2.0-winx64\bin;C:\mysql-8.2.0-winx64\lib;C:\Program Files\7-Zip;C:\Qt\Tools\mingw810_64\bin;C:\Qt\5.15.2\mingw81_64\bin;%PATH%
-        if exist C:\mysql-8.2.0-winx64\bin\mysql.exe goto mysql820_end
-        pushd %GITHUB_WORKSPACE%
-            if not exist mysql-8.2.0-winx64.zip curl -L -o mysql-8.2.0-winx64.zip https://cdn.mysql.com/Downloads/MySQL-8.2/mysql-8.2.0-winx64.zip
-            7z x -y -oC:\ mysql-8.2.0-winx64.zip
-        popd
-        :mysql820_end
-    - name: qsqlmysql5152
-      shell: cmd
-      run: |
-        set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;C:\mysql-8.2.0-winx64\bin;C:\mysql-8.2.0-winx64\lib;C:\Program Files\7-Zip;C:\Qt\Tools\mingw810_64\bin;C:\Qt\5.15.2\mingw81_64\bin;%PATH%
-        where libmysql.dll
-        rmdir /s /q "C:\Program Files\PostgreSQL" || echo 1 > NUL
-        rmdir /s /q "C:\Program Files\MySQL" || echo 1 > NUL
-        rmdir /s /q "C:\Program Files\OpenSSL" || echo 1 > NUL
-        rmdir /s /q C:\Strawberry || echo 1 > NUL
-        rmdir /s /q C:\tools\php || echo 1 > NUL
-        if not exist qtbase-everywhere-src-5.15.2.zip curl -L -o qtbase-everywhere-src-5.15.2.zip https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.zip
-        if not exist qtbase-everywhere-src-5.15.2 7z x -y qtbase-everywhere-src-5.15.2.zip
-        pushd qtbase-everywhere-src-5.15.2\src\plugins\sqldrivers
-            qmake -- MYSQL_INCDIR="C:/mysql-8.2.0-winx64/include" MYSQL_LIBDIR="C:/mysql-8.2.0-winx64/lib"
-            mingw32-make -j4 sub-mysql
-            pushd mysql
-                mingw32-make install
-            popd
-        popd
     - name: main
       shell: cmd
       run: |

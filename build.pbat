@@ -18,7 +18,6 @@ def mysql820
     popd
 
 def qsqlmysql5152 depends on toolchain and mysql820
-    where libmysql.dll
     rmdir(C:\Program Files\PostgreSQL, :github)
     rmdir(C:\Program Files\MySQL, :github)
     rmdir(C:\Program Files\OpenSSL, :github)
@@ -42,7 +41,7 @@ def qsqlmysql5152 depends on toolchain and mysql820
         #copy(C:\mysql-8.0.33-winx64\bin\libcrypto-1_1-x64.dll, C:\Qt\5.15.2\mingw81_64\bin)
     popd
 
-def main depends on qsqlmysql5152
+def main depends on toolchain
     
     #zip(Qt-5.15.2.zip, C:\Qt\5.15.2)
     #zip(QtCreator.zip, C:\Qt\Tools\QtCreator)
