@@ -21,6 +21,6 @@ popd
 where libmysql.dll
 if not exist qtbase-everywhere-src-5.15.2.zip "%CURL%" -L -o qtbase-everywhere-src-5.15.2.zip https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.zip
 if not exist qtbase-everywhere-src-5.15.2 7z x -y qtbase-everywhere-src-5.15.2.zip
-pushd qtbase-everywhere-src-5.15.2\src\plugins
+pushd qtbase-everywhere-src-5.15.2\src\plugins\sqldrivers
     qmake -- MYSQL_INCDIR="C:/mysql-8.2.0-winx64/include" MYSQL_LIBDIR="C:/mysql-8.2.0-winx64/lib"
 popd
