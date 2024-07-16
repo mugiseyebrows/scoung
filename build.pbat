@@ -1,6 +1,6 @@
 def toolchain
     use(conda)
-    pip install aqtinstall
+    pip install aqtinstall mugicli
     aqt install-qt windows desktop 5.15.2 win64_mingw81 -O C:\Qt
     aqt install-tool windows desktop tools_qtcreator qt.tools.qtcreator -O C:\Qt
     aqt install-tool windows desktop tools_mingw qt.tools.win64_mingw810 -O C:\Qt
@@ -13,6 +13,7 @@ def mysql820
     popd
 
 def qsqlmysql5152 depends on toolchain and mysql820
+    where libmysql.dll
     rmdir(C:\Program Files\PostgreSQL, :github)
     rmdir(C:\Program Files\MySQL, :github)
     rmdir(C:\Program Files\OpenSSL, :github)
@@ -20,29 +21,30 @@ def qsqlmysql5152 depends on toolchain and mysql820
     rmdir(C:\tools\php, :github)
     use(mingw, 8.1.0)
     use(qt, 5.15.2)
-    add_path(C:\mysql-8.0.33-winx64\bin)
-    add_path(C:\mysql-8.0.33-winx64\lib)
+    add_path(C:\mysql-8.2.0-winx64\bin)
+    add_path(C:\mysql-8.2.0-winx64\lib)
     download(https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.zip, :cache)
     unzip(qtbase-everywhere-src-5.15.2.zip, :t=qtbase-everywhere-src-5.15.2)
     pushd qtbase-everywhere-src-5.15.2\src\plugins
         qmake -- MYSQL_INCDIR="C:/mysql-8.2.0-winx64/include" MYSQL_LIBDIR="C:/mysql-8.2.0-winx64/lib"
-        mingw32-make -j4
-        mingw32-make install
-        copy(C:\mysql-8.0.33-winx64\bin\libmysql.dll, C:\Qt\5.15.2\mingw81_64\bin)
-        copy(C:\mysql-8.0.33-winx64\bin\libssl-1_1-x64.dll, C:\Qt\5.15.2\mingw81_64\bin)
-        copy(C:\mysql-8.0.33-winx64\bin\libcrypto-1_1-x64.dll, C:\Qt\5.15.2\mingw81_64\bin)
+        #mingw32-make -j4
+        #mingw32-make install
+        #copy(C:\mysql-8.0.33-winx64\bin\libmysql.dll, C:\Qt\5.15.2\mingw81_64\bin)
+        #copy(C:\mysql-8.0.33-winx64\bin\libssl-1_1-x64.dll, C:\Qt\5.15.2\mingw81_64\bin)
+        #copy(C:\mysql-8.0.33-winx64\bin\libcrypto-1_1-x64.dll, C:\Qt\5.15.2\mingw81_64\bin)
     popd
 
 def main depends on qsqlmysql5152
-    pyfind C:\Qt > listing.txt
+    #pyfind C:\Qt > listing.txt
 
-    zip(Qt-5.15.2.zip, C:\Qt\5.15.2)
-    zip(QtCreator.zip, C:\qt\Tools\QtCreator)
-    zip(mingw810_64.zip, C:\qt\Tools\mingw810_64)
+    #zip(Qt-5.15.2.zip, C:\Qt\5.15.2)
+    #zip(QtCreator.zip, C:\qt\Tools\QtCreator)
+    #zip(mingw810_64.zip, C:\qt\Tools\mingw810_64)
 
-    github_upload(Qt-5.15.2.zip)
-    github_upload(QtCreator.zip)
-    github_upload(mingw810_64.zip)
-    github_upload(listing.txt)
+    #github_upload(Qt-5.15.2.zip)
+    #github_upload(QtCreator.zip)
+    #github_upload(mingw810_64.zip)
+    #github_upload(listing.txt)
+    github_upload(qtbase-everywhere-src-5.15.2\src\plugins\sqldrivers\config.log)
 
 github_workflow 1

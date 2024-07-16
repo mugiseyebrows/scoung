@@ -7,7 +7,7 @@ jobs:
     - name: toolchain
       shell: cmd
       run: |
-        set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;C:\Program Files\7-Zip;C:\Qt\Tools\mingw810_64\bin;C:\Qt\5.15.2\mingw81_64\bin;C:\mysql-8.0.33-winx64\bin;C:\mysql-8.0.33-winx64\lib;%PATH%
+        set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;C:\Program Files\7-Zip;C:\Qt\Tools\mingw810_64\bin;C:\Qt\5.15.2\mingw81_64\bin;C:\mysql-8.2.0-winx64\bin;C:\mysql-8.2.0-winx64\lib;%PATH%
         pip install aqtinstall mugicli
         aqt install-qt windows desktop 5.15.2 win64_mingw81 -O C:\Qt
         aqt install-tool windows desktop tools_qtcreator qt.tools.qtcreator -O C:\Qt
@@ -15,7 +15,7 @@ jobs:
     - name: mysql820
       shell: cmd
       run: |
-        set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;C:\Program Files\7-Zip;C:\Qt\Tools\mingw810_64\bin;C:\Qt\5.15.2\mingw81_64\bin;C:\mysql-8.0.33-winx64\bin;C:\mysql-8.0.33-winx64\lib;%PATH%
+        set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;C:\Program Files\7-Zip;C:\Qt\Tools\mingw810_64\bin;C:\Qt\5.15.2\mingw81_64\bin;C:\mysql-8.2.0-winx64\bin;C:\mysql-8.2.0-winx64\lib;%PATH%
         if exist C:\mysql-8.2.0-winx64\bin\mysql.exe goto mysql820_end
         pushd %GITHUB_WORKSPACE%
             if not exist mysql-8.2.0-winx64.zip curl -L -o mysql-8.2.0-winx64.zip https://cdn.mysql.com/Downloads/MySQL-8.2/mysql-8.2.0-winx64.zip
@@ -25,8 +25,7 @@ jobs:
     - name: qsqlmysql5152
       shell: cmd
       run: |
-        set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;C:\Program Files\7-Zip;C:\Qt\Tools\mingw810_64\bin;C:\Qt\5.15.2\mingw81_64\bin;C:\mysql-8.0.33-winx64\bin;C:\mysql-8.0.33-winx64\lib;%PATH%
-        pyfind C:\mysql-8.2.0-winx64
+        set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;C:\Program Files\7-Zip;C:\Qt\Tools\mingw810_64\bin;C:\Qt\5.15.2\mingw81_64\bin;C:\mysql-8.2.0-winx64\bin;C:\mysql-8.2.0-winx64\lib;%PATH%
         where libmysql.dll
         rmdir /s /q "C:\Program Files\PostgreSQL" || echo 1 > NUL
         rmdir /s /q "C:\Program Files\MySQL" || echo 1 > NUL
@@ -41,9 +40,9 @@ jobs:
     - name: main
       shell: cmd
       run: |
-        set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;C:\Program Files\7-Zip;C:\Qt\Tools\mingw810_64\bin;C:\Qt\5.15.2\mingw81_64\bin;C:\mysql-8.0.33-winx64\bin;C:\mysql-8.0.33-winx64\lib;%PATH%
+        set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;C:\Program Files\7-Zip;C:\Qt\Tools\mingw810_64\bin;C:\Qt\5.15.2\mingw81_64\bin;C:\mysql-8.2.0-winx64\bin;C:\mysql-8.2.0-winx64\lib;%PATH%
     - name: upload
       uses: actions/upload-artifact@v4
       with:
         name: config
-        path: qtbase-everywhere-src-5.15.2\src\plugins\config.log
+        path: qtbase-everywhere-src-5.15.2\src\plugins\sqldrivers\config.log
