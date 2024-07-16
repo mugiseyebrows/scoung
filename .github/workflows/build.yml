@@ -45,29 +45,9 @@ jobs:
                 mingw32-make install
             popd
         popd
-        if exist C:\mysql-8.2.0-winx64\bin\libmysql.dll (
-        echo C:\mysql-8.2.0-winx64\bin\libmysql.dll exist
-        ) else (
-        echo C:\mysql-8.2.0-winx64\bin\libmysql.dll not exist
-        )
-        if exist C:\mysql-8.2.0-winx64\bin\libssl-1_1-x64.dll (
-        echo C:\mysql-8.2.0-winx64\bin\libssl-1_1-x64.dll exist
-        ) else (
-        echo C:\mysql-8.2.0-winx64\bin\libssl-1_1-x64.dll not exist
-        )
-        if exist C:\mysql-8.2.0-winx64\bin\libcrypto-1_1-x64.dll (
-        echo C:\mysql-8.2.0-winx64\bin\libcrypto-1_1-x64.dll exist
-        ) else (
-        echo C:\mysql-8.2.0-winx64\bin\libcrypto-1_1-x64.dll not exist
-        )
-        if exist C:\Qt\5.15.2\mingw81_64\bin (
-        echo C:\Qt\5.15.2\mingw81_64\bin exist
-        ) else (
-        echo C:\Qt\5.15.2\mingw81_64\bin not exist
-        )
-        copy /y C:\mysql-8.2.0-winx64\bin\libmysql.dll C:\Qt\5.15.2\mingw81_64\bin
-        copy /y C:\mysql-8.2.0-winx64\bin\libssl-1_1-x64.dll C:\Qt\5.15.2\mingw81_64\bin
-        copy /y C:\mysql-8.2.0-winx64\bin\libcrypto-1_1-x64.dll C:\Qt\5.15.2\mingw81_64\bin
+        copy /y C:\mysql-8.2.0-winx64\lib\libmysql.dll C:\Qt\5.15.2\mingw81_64\bin
+        copy /y C:\mysql-8.2.0-winx64\bin\libssl-3-x64.dll C:\Qt\5.15.2\mingw81_64\bin
+        copy /y C:\mysql-8.2.0-winx64\bin\libcrypto-3-x64.dll C:\Qt\5.15.2\mingw81_64\bin
     - name: main
       shell: cmd
       run: |
