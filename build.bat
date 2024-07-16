@@ -13,3 +13,4 @@ pip install aqtinstall
 aqt install-qt windows desktop 5.15.2 win64_mingw81 -O C:\Qt
 aqt install-tool windows desktop tools_mingw qt.tools.win64_mingw810 -O C:\Qt
 :toolchain_end
+7z a -y Qt-5.15.2-mingw81_64.zip C:\Qt\5.15.2\mingw81_64
