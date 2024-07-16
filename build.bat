@@ -30,4 +30,4 @@ popd
 copy /y C:\mysql-8.2.0-winx64\lib\libmysql.dll C:\Qt\5.15.2\mingw81_64\bin
 copy /y C:\mysql-8.2.0-winx64\bin\libssl-3-x64.dll C:\Qt\5.15.2\mingw81_64\bin
 copy /y C:\mysql-8.2.0-winx64\bin\libcrypto-3-x64.dll C:\Qt\5.15.2\mingw81_64\bin
-7z a -y Qt-5.15.2-mingw81_64.zip C:\Qt\5.15.2\mingw81_64
+7z a -y Qt-5.15.2.zip C:\Qt\5.15.2\mingw81_64

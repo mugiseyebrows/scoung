@@ -43,10 +43,10 @@ def qsqlmysql5152 depends on toolchain and mysql820
     copy(C:\mysql-8.2.0-winx64\bin\libcrypto-3-x64.dll, C:\Qt\5.15.2\mingw81_64\bin)
 
 def main depends on qsqlmysql5152
-    zip(Qt-5.15.2-mingw81_64.zip, C:\Qt\5.15.2\mingw81_64)
+    zip(Qt-5.15.2.zip, C:\Qt\5.15.2\mingw81_64)
     #zip(mingw810_64.zip, C:\Qt\Tools\mingw810_64)
     #github_upload(Qt-5.15.2-mingw81_64.zip)
     #github_upload(mingw810_64.zip)
-    github_release(Qt-5.15.2-mingw81_64.zip)
+    github_release(Qt-5.15.2.zip)
 
 github_workflow 1
