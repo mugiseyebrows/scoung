@@ -9,4 +9,5 @@ jobs:
       run: |
         where patch
         where gcc
-        gcc -v
+        C:\mingw64\bin\gcc.exe -v
+        C:\Strawberry\c\bin\gcc.exe -v
