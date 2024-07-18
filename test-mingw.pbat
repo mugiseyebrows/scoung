@@ -1,0 +1,25 @@
+def qtbase671
+    gcc -v
+    github_cache(C:\Qt\6.7.2\mingw1220_64, :k=qtbase671)
+    use(ninja)
+    use(cmake)
+    #where(gcc, qmake, cmake, ninja, libpq.dll, libmysql.dll)
+    if_exist_return(C:\Qt\6.7.2\mingw1220_64\bin\qmake.exe)
+    # move is faster than rmdir
+    move(C:\Program Files\PostgreSQL, C:\Program Files\PostgreSQL_, :github, :i)
+    move(C:\Program Files\MySQL, C:\Program Files\MySQL_, :github, :i)
+    move(C:\Program Files\OpenSSL, C:\Program Files\OpenSSL_, :github, :i)
+    move(C:\Strawberry, C:\Strawberry_, :github, :i)
+    move(C:\tools\php, C:\tools\php_, :github, :i)
+    download(https://download.qt.io/official_releases/qt/6.7/6.7.2/submodules/qtbase-everywhere-src-6.7.2.zip, :cache)
+    unzip(qtbase-everywhere-src-6.7.2.zip, :test=qtbase-everywhere-src-6.7.2)
+    pushd qtbase-everywhere-src-6.7.2
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=C:/Qt/6.7.2/mingw1220_64 -DQT_QMAKE_TARGET_MKSPEC=win32-g++ -DQT_BUILD_TESTS=FALSE -DQT_BUILD_EXAMPLES=FALSE -DFEATURE_system_zlib=OFF .
+        ninja
+        ninja install
+    popd
+
+
+def main depends on qtbase671
+
+github-workflow 1
