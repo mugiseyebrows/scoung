@@ -1,4 +1,4 @@
 @echo off
 rem This file is generated from test-patch.pbat, all edits will be lost
-C:\miniconda3\python.exe whats-in-path.py
-C:\miniconda3\python.exe whats-in-path.py > exes-in-path.txt
+set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;%PATH%
+where python

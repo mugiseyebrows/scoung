@@ -4,15 +4,8 @@ jobs:
   main:
     runs-on: windows-latest
     steps:
-    - name: checkout
-      uses: actions/checkout@v4
     - name: main
       shell: cmd
       run: |
-        C:\miniconda3\python.exe whats-in-path.py
-        C:\miniconda3\python.exe whats-in-path.py > exes-in-path.txt
-    - name: upload
-      uses: actions/upload-artifact@v4
-      with:
-        name: exes-in-path
-        path: exes-in-path.txt
+        set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;%PATH%
+        where python
