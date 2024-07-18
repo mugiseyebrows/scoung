@@ -21,5 +21,6 @@ def qtbase671
 
 
 def main depends on qtbase671
+    echo yes
 
 github-workflow 1

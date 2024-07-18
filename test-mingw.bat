@@ -9,9 +9,7 @@ echo CURL not found
 exit /b
 )
 gcc -v
-#where(gcc, qmake, cmake, ninja, libpq.dll, libmysql.dll)
 if exist C:\Qt\6.7.2\mingw1220_64\bin\qmake.exe goto qtbase671_end
-# move is faster than rmdir
 if not exist qtbase-everywhere-src-6.7.2.zip "%CURL%" -L -o qtbase-everywhere-src-6.7.2.zip https://download.qt.io/official_releases/qt/6.7/6.7.2/submodules/qtbase-everywhere-src-6.7.2.zip
 if not exist qtbase-everywhere-src-6.7.2 7z x -y qtbase-everywhere-src-6.7.2.zip
 pushd qtbase-everywhere-src-6.7.2
@@ -20,3 +18,4 @@ pushd qtbase-everywhere-src-6.7.2
     ninja install
 popd
 :qtbase671_end
+echo yes

@@ -14,9 +14,7 @@ jobs:
       run: |
         set PATH=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files (x86)\Android\android-sdk\cmake\3.22.1\bin;%PATH%
         gcc -v
-        #where(gcc, qmake, cmake, ninja, libpq.dll, libmysql.dll)
         if exist C:\Qt\6.7.2\mingw1220_64\bin\qmake.exe goto qtbase671_end
-        # move is faster than rmdir
         move /y "C:\Program Files\PostgreSQL" "C:\Program Files\PostgreSQL_" || echo 1 > NUL
         move /y "C:\Program Files\MySQL" "C:\Program Files\MySQL_" || echo 1 > NUL
         move /y "C:\Program Files\OpenSSL" "C:\Program Files\OpenSSL_" || echo 1 > NUL
@@ -30,3 +28,6 @@ jobs:
             ninja install
         popd
         :qtbase671_end
+    - name: main
+      shell: cmd
+      run: echo yes
