@@ -6,6 +6,6 @@ def whats
 
 def main
     use(conda)
-    where python
+    python --version
 
 github-workflow 1
