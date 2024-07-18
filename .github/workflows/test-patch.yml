@@ -7,7 +7,5 @@ jobs:
     - name: main
       shell: cmd
       run: |
-        where patch
-        where gcc
-        C:\mingw64\bin\gcc.exe -v
-        C:\Strawberry\c\bin\gcc.exe -v
+        where 7z
+        where cmake
