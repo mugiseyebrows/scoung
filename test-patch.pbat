@@ -1,0 +1,7 @@
+def main
+    github_checkout()
+    C:\miniconda3\python.exe whats-in-path.py
+    C:\miniconda3\python.exe whats-in-path.py > exes-in-path.txt
+    github_upload(exes-in-path.txt)
+
+github-workflow 1
