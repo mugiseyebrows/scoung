@@ -1,6 +1,7 @@
 def qtbase671
-    gcc -v
-    github_cache(C:\Qt\6.7.2\mingw1220_64, :k=qtbase671)
+    use(conda)
+    pip install mugicli
+    #github_cache(C:\Qt\6.7.2\mingw1220_64, :k=qtbase672)
     use(ninja)
     use(cmake)
     #where(gcc, qmake, cmake, ninja, libpq.dll, libmysql.dll)
@@ -15,10 +16,15 @@ def qtbase671
     unzip(qtbase-everywhere-src-6.7.2.zip, :test=qtbase-everywhere-src-6.7.2)
     pushd qtbase-everywhere-src-6.7.2
         cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=C:/Qt/6.7.2/mingw1220_64 -DQT_QMAKE_TARGET_MKSPEC=win32-g++ -DQT_BUILD_TESTS=FALSE -DQT_BUILD_EXAMPLES=FALSE -DFEATURE_system_zlib=OFF .
-        ninja
-        ninja install
+        #ninja
+        #ninja install
+        ninja Qt6Core.dll
+        ninja Qt6Gui.dll
+        ninja Qt6Widgets.dll
+        pyfind -iname *.dll *.exe *.a -stat | pysort > ..\stat1.txt
+        pyfind -iname *.dll *.exe *.a *.obj -stat | pysort > ..\stat2.txt
     popd
-
+    github_upload(stat1.txt, stat2.txt)
 
 def main depends on qtbase671
     echo yes
