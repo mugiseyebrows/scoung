@@ -1,8 +1,0 @@
-def main
-    use(conda)
-    pip install aqtinstall
-    aqt install-tool windows desktop tools_mingw qt.tools.win64_mingw810 -O C:\Qt
-    zip(mingw810_64.7z, C:\Qt\Tools\mingw810_64)
-    github_release(mingw810_64.7z)
-
-github_workflow 1

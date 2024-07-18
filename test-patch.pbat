@@ -1,11 +1,10 @@
 def whats
     github_checkout()
-    C:\miniconda3\python.exe whats-in-path.py
-    C:\miniconda3\python.exe whats-in-path.py > exes-in-path.txt
+    C:\miniconda\python.exe whats-in-path.py
+    C:\miniconda\python.exe whats-in-path.py > exes-in-path.txt
     github_upload(exes-in-path.txt)
 
-def main
-    use(conda)
-    python --version
+def main depends on whats
+    
 
 github-workflow 1
