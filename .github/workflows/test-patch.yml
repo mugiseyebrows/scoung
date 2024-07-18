@@ -6,4 +6,7 @@ jobs:
     steps:
     - name: main
       shell: cmd
-      run: where patch
+      run: |
+        where patch
+        where gcc
+        gcc -v
