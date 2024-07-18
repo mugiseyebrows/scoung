@@ -1,9 +1,8 @@
 def whats
     github_checkout()
-    C:\miniconda\python.exe whats-in-path.py -e exe > exes-in-path.txt
-    C:\miniconda\python.exe whats-in-path.py -e dll > dlls-in-path.txt
-    github_upload(exes-in-path.txt)
-    github_upload(dlls-in-path.txt)
+    python whats-in-path.py -e exe > exes-in-path.txt
+    python whats-in-path.py -e dll > dlls-in-path.txt
+    github_upload(exes-in-path.txt, dlls-in-path.txt, :n=whats)
 
 def main depends on whats
     
