@@ -15,11 +15,13 @@ pushd qtbase-everywhere-src-6.7.2
     cmake --build . --parallel --target Qt6Core.dll
     cmake --build . --parallel --target Qt6Gui.dll
     cmake --build . --parallel --target Qt6Widgets.dll
+    cmake --build . --parallel --target qmake
     pyfind -iname *.dll *.exe *.a -stat | pysort > ..\stat1.txt
     pyfind -iname *.dll *.exe *.a *.obj -stat | pysort > ..\stat2.txt
     ninja src/corelib/install
     ninja src/gui/install
     ninja src/widgets/install
+    ninja qmake/install
     pyfind C:\Qt\6.7.2\msvc2019_64 > ..\listing1.txt
 popd
 qmake
