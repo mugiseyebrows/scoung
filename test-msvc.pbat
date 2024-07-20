@@ -20,6 +20,7 @@ def qtbase672
         call_vcvars()
         cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=C:/Qt/6.7.2/msvc2019_64 -DQT_QMAKE_TARGET_MKSPEC=win32-msvc -DQT_BUILD_TESTS=FALSE -DQT_BUILD_EXAMPLES=FALSE -DFEATURE_system_zlib=OFF .
         cmake --build . --parallel
+        cmake --install .
         pyfind C:\Qt\6.7.2\msvc2019_64 > ..\listing1.txt
     popd
     add_path(C:\Qt\6.7.2\msvc2019_64\bin)
