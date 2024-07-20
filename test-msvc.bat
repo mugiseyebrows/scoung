@@ -11,21 +11,11 @@ if not exist qtbase-everywhere-src-6.7.2 7z x -y qtbase-everywhere-src-6.7.2.zip
 pushd qtbase-everywhere-src-6.7.2
     call vcvars64.bat
     cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=C:/Qt/6.7.2/msvc2019_64 -DQT_QMAKE_TARGET_MKSPEC=win32-msvc -DQT_BUILD_TESTS=FALSE -DQT_BUILD_EXAMPLES=FALSE -DFEATURE_system_zlib=OFF .
-    :: cmake --build . --parallel --target qmake
-    cmake --build . --parallel --target Qt6Core.dll
-    cmake --build . --parallel --target Qt6Gui.dll
-    cmake --build . --parallel --target Qt6Widgets.dll
-    cmake --build . --parallel --target qmake
-    pyfind -iname *.dll *.exe *.a -stat | pysort > ..\stat1.txt
-    pyfind -iname *.dll *.exe *.a *.obj -stat | pysort > ..\stat2.txt
-    ninja src/corelib/install
-    ninja src/gui/install
-    ninja src/widgets/install
-    ninja qmake/install
+    cmake --build . --parallel
     pyfind C:\Qt\6.7.2\msvc2019_64 > ..\listing1.txt
 popd
 qmake
 nmake
-pyfind -maxdepth 2 > listing2.txt
+pyfind -maxdepth 3 > listing2.txt
 :qtbase672_end
 echo yes
