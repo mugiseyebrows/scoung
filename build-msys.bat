@@ -4,7 +4,7 @@ set PATH=C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFI
 echo RUNNER_TEMP %RUNNER_TEMP%
 where mugideploy 1> NUL 2> NUL || pip install mugideploy
 :: install(mugicli)
-qmake6 
+qmake6
 mingw32-make -j4
 mugideploy collect --bin release\main.exe --plugins sqldrivers
 :: pyfind %RUNNER_TEMP% -abspath -maxdepth 1
