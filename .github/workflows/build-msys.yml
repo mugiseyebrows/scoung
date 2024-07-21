@@ -15,14 +15,17 @@ jobs:
           mingw-w64-ucrt-x86_64-libmariadbclient mingw-w64-ucrt-x86_64-postgresql
           mingw-w64-ucrt-x86_64-firebird mingw-w64-ucrt-x86_64-qt6-activeqt mingw-w64-ucrt-x86_64-qwt-qt6
         update: true
-    - name: main
+    - name: build
       shell: cmd
       run: |
-        set PATH=C:\Miniconda;C:\Miniconda\Scripts;%RUNNER_TEMP%\msys64\ucrt64\bin;%RUNNER_TEMP%\msys64\ucrt64\share\qt6\bin;C:\msys64\ucrt64\bin;C:\msys64\ucrt64\share\qt6\bin;%PATH%
-        where mugideploy 1> NUL 2> NUL || pip install mugideploy
-        :: move(C:\msys64, C:\msys64_, :github)
+        set PATH=%RUNNER_TEMP%\msys64\ucrt64\bin;%RUNNER_TEMP%\msys64\ucrt64\share\qt6\bin;C:\msys64\ucrt64\bin;C:\msys64\ucrt64\share\qt6\bin;%PATH%
         qmake6
         mingw32-make -j4
+    - name: pack
+      shell: cmd
+      run: |
+        set PATH=%RUNNER_TEMP%\msys64\ucrt64\bin;%RUNNER_TEMP%\msys64\ucrt64\share\qt6\bin;C:\msys64\ucrt64\bin;C:\msys64\ucrt64\share\qt6\bin;C:\Miniconda;C:\Miniconda\Scripts;%PATH%
+        where mugideploy 1> NUL 2> NUL || pip install mugideploy
         mugideploy collect --bin release\main.exe --plugins sqldrivers
     - name: upload
       uses: actions/upload-artifact@v4
