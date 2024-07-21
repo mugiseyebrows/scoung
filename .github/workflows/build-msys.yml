@@ -20,7 +20,7 @@ jobs:
       run: |
         set PATH=C:\Miniconda;C:\Miniconda\Scripts;%RUNNER_TEMP%\msys64\ucrt64\bin;%RUNNER_TEMP%\msys64\ucrt64\share\qt6\bin;C:\msys64\ucrt64\bin;C:\msys64\ucrt64\share\qt6\bin;%PATH%
         where mugideploy 1> NUL 2> NUL || pip install mugideploy
-        move /y C:\msys64 C:\msys64_
+        :: move(C:\msys64, C:\msys64_, :github)
         qmake6
         mingw32-make -j4
         mugideploy collect --bin release\main.exe --plugins sqldrivers

@@ -7,7 +7,7 @@ def main
     add_path(%RUNNER_TEMP%\msys64\ucrt64\share\qt6\bin)
     add_path(C:\msys64\ucrt64\bin)
     add_path(C:\msys64\ucrt64\share\qt6\bin)
-    move(C:\msys64, C:\msys64_, :github)
+    :: move(C:\msys64, C:\msys64_, :github)
     qmake6
     mingw32-make -j4
     mugideploy collect --bin release\main.exe --plugins sqldrivers
