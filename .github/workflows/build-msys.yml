@@ -16,10 +16,13 @@ jobs:
       shell: cmd
       run: |
         set PATH=C:\Miniconda;C:\Miniconda\Scripts;C:\msys64\ucrt64\bin;C:\msys64\ucrt64\share\qt6\bin;%PATH%
+        echo RUNNER_TEMP %RUNNER_TEMP%
         where mugideploy 1> NUL 2> NUL || pip install mugideploy
+        where pyfind 1> NUL 2> NUL || pip install mugicli
         qmake6
         mingw32-make -j4
         mugideploy collect --bin release\main.exe --plugins sqldrivers
+        pyfind %RUNNER_TEMP% -abspath -maxdepth 1
     - name: upload
       uses: actions/upload-artifact@v4
       with:

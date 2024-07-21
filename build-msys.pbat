@@ -1,6 +1,8 @@
 def main
+    echo RUNNER_TEMP %RUNNER_TEMP%
     use(conda)
     install(mugideploy)
+    install(mugicli)
     github_setup_msys2(:update, :msystem=UCRT64, mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-qt6-base mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-libmariadbclient mingw-w64-ucrt-x86_64-postgresql mingw-w64-ucrt-x86_64-firebird mingw-w64-ucrt-x86_64-qt6-activeqt mingw-w64-ucrt-x86_64-qwt-qt6)
     add_path(C:\msys64\ucrt64\bin)
     add_path(C:\msys64\ucrt64\share\qt6\bin)
@@ -8,6 +10,7 @@ def main
     mingw32-make -j4
     mugideploy collect --bin release\main.exe --plugins sqldrivers
     github_upload(main-0.0.1-win64)
+    pyfind %RUNNER_TEMP% -abspath -maxdepth 1
 
 github-workflow 1
 
