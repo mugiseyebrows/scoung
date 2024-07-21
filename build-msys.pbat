@@ -1,6 +1,6 @@
 def setup
     github_checkout()
-    github_setup_msys2(:update, :msystem=UCRT64, :release=False, mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-qt6-base mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-libmariadbclient mingw-w64-ucrt-x86_64-postgresql mingw-w64-ucrt-x86_64-firebird mingw-w64-ucrt-x86_64-qt6-activeqt mingw-w64-ucrt-x86_64-qwt-qt6)
+    github_setup_msys2(:update, :msystem=UCRT64, :release=1, mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-qt6-base mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-libmariadbclient mingw-w64-ucrt-x86_64-postgresql mingw-w64-ucrt-x86_64-firebird mingw-w64-ucrt-x86_64-qt6-activeqt mingw-w64-ucrt-x86_64-qwt-qt6)
 
 def build
     use(msys)
