@@ -28,7 +28,7 @@ if not exist OpenSSL_1_0_1m.zip "%CURL%" -L -o OpenSSL_1_0_1m.zip https://github
 :openssl_end
 move /y "C:\Program Files\OpenSSL" "C:\Program Files\OpenSSL_"
 where mugideploy > NUL 2>&1 || pip install mugideploy
-if not exist qt-everywhere-opensource-src-4.8.7.zip "%CURL%" -L -o qt-everywhere-opensource-src-4.8.7.zip https://qt.mirror.constant.com/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.zip
+if not exist qt-everywhere-opensource-src-4.8.7.zip "%CURL%" -L -o qt-everywhere-opensource-src-4.8.7.zip https://download.qt.io/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.zip
 if not exist qt-everywhere-opensource-src-4.8.7 7z x -y qt-everywhere-opensource-src-4.8.7.zip
 set MYSQL_INCLUDE=C:\mysql-5.5.62-win32\include
 set MYSQL_BIN=C:\mysql-5.5.62-win32\lib

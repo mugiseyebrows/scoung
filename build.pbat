@@ -31,7 +31,7 @@ def main depends on mingw mysql openssl
     
     # https://download.qt.io/archive/qt/4.7/qt-everywhere-opensource-src-4.7.4.zip
 
-    download(https://qt.mirror.constant.com/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.zip, :cache)
+    download(https://download.qt.io/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.zip, :cache)
     
     unzip(qt-everywhere-opensource-src-4.8.7.zip, :t=qt-everywhere-opensource-src-4.8.7)
 
