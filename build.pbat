@@ -43,7 +43,8 @@ def main depends on mingw mysql openssl
 
     set OPENSSL_BIN=C:\OpenSSL\bin
     set OPENSSL_INCLUDE=C:\OpenSSL\include
-    set OPENSSL_MODE=-openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32"
+    set OPENSSL_MODE=-openssl-linked 
+    set OPENSSL_LIBS="-lssleay32 -llibeay32"
     
     set mode=-debug-and-release
     #set mode=-release

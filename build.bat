@@ -34,7 +34,8 @@ set MYSQL_INCLUDE=C:\mysql-5.5.62-win32\include
 set MYSQL_BIN=C:\mysql-5.5.62-win32\lib
 set OPENSSL_BIN=C:\OpenSSL\bin
 set OPENSSL_INCLUDE=C:\OpenSSL\include
-set OPENSSL_MODE=-openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32"
+set OPENSSL_MODE=-openssl-linked 
+set OPENSSL_LIBS="-lssleay32 -llibeay32"
 set mode=-debug-and-release
 set exclude=-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-scripttools -no-script -nomake tests -nomake examples
 pushd qt-everywhere-opensource-src-4.8.7
