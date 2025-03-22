@@ -1,6 +1,6 @@
 @echo off
 rem This file is generated from build.pbat, all edits will be lost
-set PATH=C:\Program Files\7-Zip;C:\mingw540_32\bin;C:\Qt\4.8.7\mingw540_32\bin;C:\Strawberry\perl\bin;C:\mysql-5.5.62-win32\lib;C:\mysql-5.5.62-win32\bin;C:\OpenSSL\bin;C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;%PATH%
+set PATH=C:\Program Files\7-Zip;C:\mingw540_32\bin;C:\Qt\4.8.7\mingw540_32\bin;C:\mysql-5.5.62-win32\lib;C:\mysql-5.5.62-win32\bin;C:\OpenSSL\bin;C:\Strawberry\perl\bin;C:\Miniconda3;C:\Miniconda3\Scripts;%USERPROFILE%\Miniconda3;%USERPROFILE%\Miniconda3\Scripts;%PATH%
 if exist "C:\Program Files\Git\usr\bin\patch.exe" set PATCH=C:\Program Files\Git\usr\bin\patch.exe
 if not defined PATCH (
 echo PATCH not found
@@ -42,6 +42,8 @@ pushd qt-everywhere-opensource-src-4.8.7
     "%PATCH%" -N -p1 -i ..\0001-fix-doc-script.patch
     "%PATCH%" -N -p1 -i ..\0001-add-mysql-to-LIBS.patch
     call configure -prefix C:\Qt\4.8.7\mingw540_32 -opensource -developer-build -confirm-license -shared -platform win32-g++ %OPENSSL_MODE% -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -I %OPENSSL_INCLUDE% -L %OPENSSL_BIN%
+    dir
+    type configure.cache
     mingw32-make -j4
     if not exist bin\sqldrivers mkdir bin\sqldrivers
     copy /y plugins\sqldrivers\qsqlite4.dll bin\sqldrivers

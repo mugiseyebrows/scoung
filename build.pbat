@@ -19,10 +19,10 @@ def main depends on mingw mysql openssl
     move /y "C:\Program Files\OpenSSL" "C:\Program Files\OpenSSL_"
     add_path(C:\mingw540_32\bin)
     add_path(C:\Qt\4.8.7\mingw540_32\bin)
-    add_path(C:\Strawberry\perl\bin)
     add_path(C:\mysql-5.5.62-win32\lib)
     add_path(C:\mysql-5.5.62-win32\bin)
     add_path(C:\OpenSSL\bin)
+    add_path(C:\Strawberry\perl\bin)
     use(conda)
     install(mugideploy)
 
@@ -57,6 +57,8 @@ def main depends on mingw mysql openssl
         patch(..\0001-add-mysql-to-LIBS.patch, :N, :p1)
         #mingw32-make confclean
         call configure -prefix C:\Qt\4.8.7\mingw540_32 -opensource -developer-build -confirm-license -shared -platform win32-g++ %OPENSSL_MODE% -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -I %OPENSSL_INCLUDE% -L %OPENSSL_BIN%
+        dir
+        type configure.cache
         mingw32-make -j4
         mkdir(bin\sqldrivers)
         copy(plugins\sqldrivers\qsqlite4.dll, bin\sqldrivers)
