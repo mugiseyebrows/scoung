@@ -20,7 +20,7 @@ if not exist i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z "%CURL%" -L -o i686-5.
 :mingw_end
 if exist C:\mysql-5.5.62-win32\bin\mysql.exe goto mysql_end
 if not exist mysql-5.5.62-win32.zip "%CURL%" -L -o mysql-5.5.62-win32.zip https://cdn.mysql.com/Downloads/MySQL-5.5/mysql-5.5.62-win32.zip
-7z x -y -oC:\mysql-5.5.62-win32 mysql-5.5.62-win32.zip
+7z x -y -oC:\ mysql-5.5.62-win32.zip
 :mysql_end
 if exist C:\OpenSSL\bin\openssl.exe goto openssl_end
 if not exist OpenSSL_1_0_1m.zip "%CURL%" -L -o OpenSSL_1_0_1m.zip https://github.com/mugiseyebrows/drenor/releases/download/OpenSSL_1_0_1m/OpenSSL_1_0_1m.zip

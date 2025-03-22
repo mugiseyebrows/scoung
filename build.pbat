@@ -7,7 +7,7 @@ def mingw
 def mysql
     if_exist_return(C:\mysql-5.5.62-win32\bin\mysql.exe)
     download(https://cdn.mysql.com/Downloads/MySQL-5.5/mysql-5.5.62-win32.zip, :cache)
-    unzip(mysql-5.5.62-win32.zip, :o=C:\mysql-5.5.62-win32)
+    unzip(mysql-5.5.62-win32.zip, :o=C:\)
 
 def openssl
     if_exist_return(C:\OpenSSL\bin\openssl.exe)

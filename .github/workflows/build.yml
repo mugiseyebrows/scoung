@@ -21,7 +21,7 @@ jobs:
         set PATH=C:\Program Files\7-Zip;%PATH%
         if exist C:\mysql-5.5.62-win32\bin\mysql.exe goto mysql_end
         if not exist mysql-5.5.62-win32.zip curl -L -o mysql-5.5.62-win32.zip https://cdn.mysql.com/Downloads/MySQL-5.5/mysql-5.5.62-win32.zip
-        7z x -y -oC:\mysql-5.5.62-win32 mysql-5.5.62-win32.zip
+        7z x -y -oC:\ mysql-5.5.62-win32.zip
         :mysql_end
     - name: openssl
       shell: cmd
