@@ -3,77 +3,75 @@ on: push
 jobs:
   main:
     runs-on: windows-2019
-    strategy:
-      matrix:
-        qt-version:
-        - 4.8.7
-      fail-fast: false
     steps:
-    - uses: actions/checkout@v3
-      name: checkout
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: mingw
+      shell: cmd
+      run: |
+        set PATH=C:\Program Files\7-Zip;%PATH%
+        if exist C:\mingw540_32\bin\gcc.exe goto mingw_end
+        if not exist i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z curl -L -o i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z "https://netix.dl.sourceforge.net/project/mingw-w64/Toolchains%%20targetting%%20Win32/Personal%%20Builds/mingw-builds/5.4.0/threads-win32/dwarf/i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z"
+        7z rn i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z mingw32 mingw540_32
+        7z x -y -oC:\ i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z
+        :mingw_end
+    - name: mysql
+      shell: cmd
+      run: |
+        set PATH=C:\Program Files\7-Zip;%PATH%
+        if exist C:\mysql-5.5.62-win32\bin\mysql.exe goto mysql_end
+        if not exist mysql-5.5.62-win32.zip curl -L -o mysql-5.5.62-win32.zip https://cdn.mysql.com/Downloads/MySQL-5.5/mysql-5.5.62-win32.zip
+        7z x -y -oC:\mysql-5.5.62-win32 mysql-5.5.62-win32.zip
+        :mysql_end
+    - name: openssl
+      shell: cmd
+      run: |
+        set PATH=C:\Program Files\7-Zip;%PATH%
+        if exist C:\OpenSSL\bin\openssl.exe goto openssl_end
+        if not exist OpenSSL_1_0_1m.zip curl -L -o OpenSSL_1_0_1m.zip https://github.com/mugiseyebrows/drenor/releases/download/OpenSSL_1_0_1m/OpenSSL_1_0_1m.zip
+        7z x -y -oC:\ OpenSSL_1_0_1m.zip
+        :openssl_end
     - name: main
       shell: cmd
       run: |
+        set PATH=C:\mingw540_32\bin;C:\Qt\4.8.7\mingw540_32\bin;C:\Strawberry\perl\bin;C:\mysql-5.5.62-win32\lib;C:\mysql-5.5.62-win32\bin;C:\OpenSSL\bin;C:\Miniconda;C:\Miniconda\Scripts;C:\Program Files\7-Zip;%PATH%
         if exist "C:\Program Files\Git\usr\bin\patch.exe" set PATCH=C:\Program Files\Git\usr\bin\patch.exe
         if not defined PATCH (
         echo PATCH not found
         exit /b
         )
-        set PATH=%CD%\mingw32\bin;C:\Qt-${{ matrix.qt-version }}\bin;C:\Strawberry\perl\bin;%CD%\OpenSSL\bin;%PATH%
-        curl -L -o i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z "https://netix.dl.sourceforge.net/project/mingw-w64/Toolchains%%20targetting%%20Win32/Personal%%20Builds/mingw-builds/5.4.0/threads-win32/dwarf/i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z"
-        if not exist mingw32 7z x -y i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z
-        if exist "C:\Strawberry\perl\bin\perl.exe" set PERL=C:\Strawberry\perl\bin\perl.exe
-        if not defined PERL (
-        echo PERL not found
-        exit /b
-        )
-        if exist "%CD%\mingw32\bin\gcc.exe" set MINGW=%CD%\mingw32\bin\gcc.exe
-        if not defined MINGW (
-        echo MINGW not found
-        exit /b
-        )
-        g++ -v
-        set qt_version=${{ matrix.qt-version }}
-        set maj_min=%qt_version:~0,3%
-        if "%maj_min%" equ "4.8" (
-            curl -L -o "qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip" "https://download.qt.io/archive/qt/%maj_min%/${{ matrix.qt-version }}/qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip"
-        ) else (
-            curl -L -o "qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip" "https://download.qt.io/archive/qt/%maj_min%/qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip"
-        )
-        if not exist "qt-everywhere-opensource-src-${{ matrix.qt-version }}" 7z x -y "qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip"
-        curl -L -o mysql-5.5.62-win32.zip https://cdn.mysql.com/Downloads/MySQL-5.5/mysql-5.5.62-win32.zip
-        if not exist mysql-5.5.62-win32 7z x -y mysql-5.5.62-win32.zip
-        set MYSQL_INCLUDE=%CD%\mysql-5.5.62-win32\include
-        set MYSQL_BIN=%CD%\mysql-5.5.62-win32\lib
-        curl -L -o OpenSSL_1_0_1m.zip https://github.com/mugiseyebrows/drenor/releases/download/OpenSSL_1_0_1m/OpenSSL_1_0_1m.zip
-        if not exist OpenSSL 7z x -y OpenSSL_1_0_1m.zip
-        set OPENSSL_BIN=%CD%\OpenSSL\bin
-        set OPENSSL_INCLUDE=%CD%\OpenSSL\include
+        move /y "C:\Program Files\OpenSSL" "C:\Program Files\OpenSSL_"
+        where mugideploy > NUL 2>&1 || pip install mugideploy
+        if not exist qt-everywhere-opensource-src-4.8.7.zip curl -L -o qt-everywhere-opensource-src-4.8.7.zip https://qt.mirror.constant.com/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.zip
+        if not exist qt-everywhere-opensource-src-4.8.7 7z x -y qt-everywhere-opensource-src-4.8.7.zip
+        set MYSQL_INCLUDE=C:\mysql-5.5.62-win32\include
+        set MYSQL_BIN=C:\mysql-5.5.62-win32\lib
+        set OPENSSL_BIN=C:\OpenSSL\bin
+        set OPENSSL_INCLUDE=C:\OpenSSL\include
         set OPENSSL_MODE=-openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32"
         set mode=-debug-and-release
         set exclude=-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-scripttools -no-script -nomake tests -nomake examples
-        pushd qt-everywhere-opensource-src-${{ matrix.qt-version }}
+        pushd qt-everywhere-opensource-src-4.8.7
             "%PATCH%" -N -p1 -i ..\0001-fix-doc-script.patch
             "%PATCH%" -N -p1 -i ..\0001-add-mysql-to-LIBS.patch
-            call configure -prefix C:\Qt-${{ matrix.qt-version }} -opensource -developer-build -confirm-license -shared -platform win32-g++ %OPENSSL_MODE% -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -I %OPENSSL_INCLUDE% -L %OPENSSL_BIN%
+            call configure -prefix C:\Qt\4.8.7\mingw540_32 -opensource -developer-build -confirm-license -shared -platform win32-g++ %OPENSSL_MODE% -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -I %OPENSSL_INCLUDE% -L %OPENSSL_BIN%
             mingw32-make -j4
-            if not exist "bin\sqldrivers" mkdir "bin\sqldrivers"
+            if not exist bin\sqldrivers mkdir bin\sqldrivers
             copy /y plugins\sqldrivers\qsqlite4.dll bin\sqldrivers
             mingw32-make docs
             mingw32-make install
         popd
-        copy /y "mingw32\bin\libstdc++-6.dll" "C:\Qt-${{ matrix.qt-version }}\bin"
-        copy /y mingw32\bin\libgcc_s_dw2-1.dll "C:\Qt-${{ matrix.qt-version }}\bin"
-        copy /y OpenSSL\bin\libeay32.dll "C:\Qt-${{ matrix.qt-version }}\bin"
-        copy /y OpenSSL\bin\ssleay32.dll "C:\Qt-${{ matrix.qt-version }}\bin"
-        if not exist "Qt-${{ matrix.qt-version }}.7z" 7z a -y -mx9 "Qt-${{ matrix.qt-version }}.7z" "C:\Qt-${{ matrix.qt-version }}"
+        mugideploy copy-dep --bin C:\Qt\4.8.7\mingw540_32\bin\qmake.exe --dst C:\Qt\4.8.7\mingw540_32\bin
+        mugideploy copy-dep --bin C:\Qt\4.8.7\mingw540_32\bin\QtNetwork4.dll --dst C:\Qt\4.8.7\mingw540_32\bin
+        mugideploy copy-dep --bin C:\Qt\4.8.7\mingw540_32\plugins\sqldrivers\qsqlmysql4.dll --dst C:\Qt\4.8.7\mingw540_32\bin
+        7z a -y Qt-4.8.7.7z C:\Qt\4.8.7\mingw540_32
     - name: upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: Qt-${{ matrix.qt-version }}
-        path: Qt-${{ matrix.qt-version }}.7z
+        name: Qt-4.8.7.7z
+        path: Qt-4.8.7.7z
     - name: release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: Qt-${{ matrix.qt-version }}.7z
+        files: Qt-4.8.7.7z

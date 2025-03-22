@@ -1,82 +1,75 @@
+def mingw
+    if_exist_return(C:\mingw540_32\bin\gcc.exe)
+    download("https://netix.dl.sourceforge.net/project/mingw-w64/Toolchains%%20targetting%%20Win32/Personal%%20Builds/mingw-builds/5.4.0/threads-win32/dwarf/i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z", :cache)
+    7z rn i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z mingw32 mingw540_32
+    unzip(i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z, :o=C:\)
 
-def main
-    qt-version = github_matrix([4.8.7])
-    #gcc-version = github_matrix([4.6.2-1, 4.7.2-1, 4.8.1-4, 4.9.3-1, 5.3.0-3, 6.3.0-1])
+def mysql
+    if_exist_return(C:\mysql-5.5.62-win32\bin\mysql.exe)
+    download(https://cdn.mysql.com/Downloads/MySQL-5.5/mysql-5.5.62-win32.zip, :cache)
+    unzip(mysql-5.5.62-win32.zip, :o=C:\mysql-5.5.62-win32)
 
+def openssl
+    if_exist_return(C:\OpenSSL\bin\openssl.exe)
+    download(https://github.com/mugiseyebrows/drenor/releases/download/OpenSSL_1_0_1m/OpenSSL_1_0_1m.zip, :cache)
+    unzip(OpenSSL_1_0_1m.zip, :o=C:\)
+
+def main depends on mingw mysql openssl
     github_checkout()
-    pushd_cd()
-    set_path(
-        %CD%\mingw32\bin,
-        C:\Qt-${{ matrix.qt-version }}\bin,
-        C:\Strawberry\perl\bin,
-        %CD%\OpenSSL\bin,
-        %PATH%
-    )
+    move /y "C:\Program Files\OpenSSL" "C:\Program Files\OpenSSL_"
+    add_path(C:\mingw540_32\bin)
+    add_path(C:\Qt\4.8.7\mingw540_32\bin)
+    add_path(C:\Strawberry\perl\bin)
+    add_path(C:\mysql-5.5.62-win32\lib)
+    add_path(C:\mysql-5.5.62-win32\bin)
+    add_path(C:\OpenSSL\bin)
+    use(conda)
+    install(mugideploy)
 
-    download("https://netix.dl.sourceforge.net/project/mingw-w64/Toolchains%%20targetting%%20Win32/Personal%%20Builds/mingw-builds/5.4.0/threads-win32/dwarf/i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z", i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z)
-    unzip(i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z, mingw32)
-
-    PERL = find_app([C:\Strawberry\perl\bin\perl.exe])
-    MINGW = find_app([%CD%\mingw32\bin\gcc.exe])
+    #PERL = find_app([C:\Strawberry\perl\bin\perl.exe])
+    #MINGW = find_app([%CD%\mingw32\bin\gcc.exe])
     
-    g++ -v
-    
-    set qt_version=${{ matrix.qt-version }}
-    maj_min = substr(qt_version, 0, 3)
-
     # https://download.qt.io/archive/qt/4.7/qt-everywhere-opensource-src-4.7.4.zip
 
-    if "%maj_min%" equ "4.8" (
-        download(https://download.qt.io/archive/qt/%maj_min%/${{ matrix.qt-version }}/qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip, qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip)
-    ) else (
-        download(https://download.qt.io/archive/qt/%maj_min%/qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip, qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip)
-    )
+    download(https://qt.mirror.constant.com/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.zip, :cache)
+    
+    unzip(qt-everywhere-opensource-src-4.8.7.zip, :t=qt-everywhere-opensource-src-4.8.7)
 
-    unzip(qt-everywhere-opensource-src-${{ matrix.qt-version }}.zip, qt-everywhere-opensource-src-${{ matrix.qt-version }})
-
-    download(https://cdn.mysql.com/Downloads/MySQL-5.5/mysql-5.5.62-win32.zip, mysql-5.5.62-win32.zip)
-    unzip(mysql-5.5.62-win32.zip, mysql-5.5.62-win32)
     #download(https://github.com/mugiseyebrows/build-openssl/releases/download/1.1.1n/OpenSSL-1.1.1n-i686.zip, OpenSSL-1.1.1n-i686.zip)
     #unzip(OpenSSL-1.1.1n-i686.zip, OpenSSL)
 
-    set MYSQL_INCLUDE=%CD%\mysql-5.5.62-win32\include
-    set MYSQL_BIN=%CD%\mysql-5.5.62-win32\lib
+    set MYSQL_INCLUDE=C:\mysql-5.5.62-win32\include
+    set MYSQL_BIN=C:\mysql-5.5.62-win32\lib
 
-    download(https://github.com/mugiseyebrows/drenor/releases/download/OpenSSL_1_0_1m/OpenSSL_1_0_1m.zip, OpenSSL_1_0_1m.zip)
-    unzip(OpenSSL_1_0_1m.zip, OpenSSL)
-    
-    set OPENSSL_BIN=%CD%\OpenSSL\bin
-    set OPENSSL_INCLUDE=%CD%\OpenSSL\include
+    set OPENSSL_BIN=C:\OpenSSL\bin
+    set OPENSSL_INCLUDE=C:\OpenSSL\include
     set OPENSSL_MODE=-openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32"
     
     set mode=-debug-and-release
     #set mode=-release
     
     set exclude=-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-scripttools -no-script -nomake tests -nomake examples
-    #rmdir(C:\Qt-${{ matrix.qt-version }})
-    pushd qt-everywhere-opensource-src-${{ matrix.qt-version }}
+
+    pushd qt-everywhere-opensource-src-4.8.7
         #patch(..\0001-include-winerror.h.patch, :N, :p=1)
-        patch(..\0001-fix-doc-script.patch, :N, :p=1)
-        patch(..\0001-add-mysql-to-LIBS.patch, :N, :p=1)
+        patch(..\0001-fix-doc-script.patch, :N, :p1)
+        patch(..\0001-add-mysql-to-LIBS.patch, :N, :p1)
         #mingw32-make confclean
-        call configure -prefix C:\Qt-${{ matrix.qt-version }} -opensource -developer-build -confirm-license -shared -platform win32-g++ %OPENSSL_MODE% -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -I %OPENSSL_INCLUDE% -L %OPENSSL_BIN%
+        call configure -prefix C:\Qt\4.8.7\mingw540_32 -opensource -developer-build -confirm-license -shared -platform win32-g++ %OPENSSL_MODE% -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -I %OPENSSL_INCLUDE% -L %OPENSSL_BIN%
         mingw32-make -j4
         mkdir(bin\sqldrivers)
-        copy_file(plugins\sqldrivers\qsqlite4.dll, bin\sqldrivers)
+        copy(plugins\sqldrivers\qsqlite4.dll, bin\sqldrivers)
         mingw32-make docs
         mingw32-make install
     popd
-    # mugideploy list --bin C:\Qt-4.8.7\bin\qmake.exe
-    copy_file(mingw32\bin\libstdc++-6.dll, C:\Qt-${{ matrix.qt-version }}\bin)
-    copy_file(mingw32\bin\libgcc_s_dw2-1.dll, C:\Qt-${{ matrix.qt-version }}\bin)
-    # mugideploy list --bin C:\Qt-4.8.7\bin\QtNetwork4.dll
-    copy_file(OpenSSL\bin\libeay32.dll, C:\Qt-${{ matrix.qt-version }}\bin)
-    copy_file(OpenSSL\bin\ssleay32.dll, C:\Qt-${{ matrix.qt-version }}\bin)
-    # zip
-    zip(C:\Qt-${{ matrix.qt-version }}, Qt-${{ matrix.qt-version }}.7z, :ultra)
-    github_upload(Qt-${{ matrix.qt-version }}.7z)
-    github_release(Qt-${{ matrix.qt-version }}.7z)
-    popd_cd()
+    mugideploy copy-dep --bin C:\Qt\4.8.7\mingw540_32\bin\qmake.exe --dst C:\Qt\4.8.7\mingw540_32\bin
+    mugideploy copy-dep --bin C:\Qt\4.8.7\mingw540_32\bin\QtNetwork4.dll --dst C:\Qt\4.8.7\mingw540_32\bin
+    mugideploy copy-dep --bin C:\Qt\4.8.7\mingw540_32\plugins\sqldrivers\qsqlmysql4.dll --dst C:\Qt\4.8.7\mingw540_32\bin
+    
+    zip(Qt-4.8.7.7z, C:\Qt\4.8.7\mingw540_32)
+    github_upload(Qt-4.8.7.7z)
+    github_release(Qt-4.8.7.7z)
 
 github_workflow 1
 github_image windows-2019
+env-policy 1
