@@ -27,11 +27,11 @@ def main depends on mingw mysql openssl
     use(conda)
     install(mugideploy)
 
-    where gcc
-    where mingw32-make
-    where perl
-    dir C:\OpenSSL\bin
-    dir C:\mysql-5.5.62-win32\lib
+    # where gcc
+    # where mingw32-make
+    # where perl
+    # dir C:\OpenSSL\bin
+    # dir C:\mysql-5.5.62-win32\lib
 
     #PERL = find_app([C:\Strawberry\perl\bin\perl.exe])
     #MINGW = find_app([%CD%\mingw32\bin\gcc.exe])
