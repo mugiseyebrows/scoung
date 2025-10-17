@@ -31,8 +31,6 @@ if not exist qt-everywhere-src-6.10.0.zip (
 7z rn qt-everywhere-src-6.10.0.zip qt-everywhere-src-6.10.0 src
 if not exist src 7z x -y qt-everywhere-src-6.10.0.zip
 :source_end
-set LLVM_INSTALL_DIR=C:\llvm19
-qdoc --help
 pushd src
     cmake -G Ninja -DQT_HOST_PATH=C:\qt\6.10.0\mingw_64 -DQT_NO_PACKAGE_VERSION_CHECK=ON -DQT_NO_PACKAGE_VERSION_INCOMPATIBLE_WARNING=ON -DBUILD_qtwebengine=OFF -DCMAKE_INSTALL_PREFIX=C:/Qt/6.10.0/mingw_64 .
     ninja docs
