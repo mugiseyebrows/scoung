@@ -1,0 +1,14 @@
+name: main
+on: push
+jobs:
+  main:
+    runs-on: windows-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: main
+      shell: cmd
+      run: |
+        set PATH=C:\Miniconda;C:\Miniconda\Scripts;%LOCALAPPDATA%\Programs\Python\Python313;%LOCALAPPDATA%\Programs\Python\Python313\Scripts;C:\Python313;C:\Python313\Scripts;%PATH%
+        python -c "import psutil" || python -m pip install "psutil"
+        python test.py

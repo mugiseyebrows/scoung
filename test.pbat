@@ -1,0 +1,8 @@
+def main
+    github_checkout()
+    use(conda)
+    use(python, 3.13)
+    pip_install(psutil)
+    python test.py
+
+github-workflow 1
