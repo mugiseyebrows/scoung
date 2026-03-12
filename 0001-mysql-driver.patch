@@ -1,0 +1,25 @@
+From db463ad219512b27c8711343f14845722b6e9a23 Mon Sep 17 00:00:00 2001
+From: Doronin Stanislav <mugisbrows@gmail.com>
+Date: Wed, 11 Mar 2026 17:08:39 +0300
+Subject: [PATCH] mysql-driver
+
+---
+ src/sql/drivers/drivers.pri | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/sql/drivers/drivers.pri b/src/sql/drivers/drivers.pri
+index 87cc0b1..696ff7d 100644
+--- a/src/sql/drivers/drivers.pri
++++ b/src/sql/drivers/drivers.pri
+@@ -1,7 +1,7 @@
+ contains(sql-drivers, all):sql-driver += psql mysql odbc oci tds db2 sqlite ibase
+ 
+ contains(sql-drivers, psql):include($$PWD/psql/qsql_psql.pri)
+-contains(sql-drivers, mysql):include($$PWD/mysql/qsql_mysql.pri)
++include($$PWD/mysql/qsql_mysql.pri)
+ contains(sql-drivers, odbc):include($$PWD/odbc/qsql_odbc.pri)
+ contains(sql-drivers, oci):include($$PWD/oci/qsql_oci.pri)
+ contains(sql-drivers, tds):include($$PWD/tds/qsql_tds.pri)
+-- 
+2.45.2.windows.1
+

@@ -34,7 +34,7 @@ jobs:
     - name: main
       shell: cmd
       run: |
-        set PATH=C:\mingw540_32\bin;C:\Qt\4.8.7-profile\mingw540_32\bin;C:\mysql-5.5.62-win32\lib;C:\mysql-5.5.62-win32\bin;C:\OpenSSL\bin;C:\Strawberry\perl\bin;C:\Miniconda;C:\Miniconda\Scripts;C:\Windows\System32;C:\Program Files\7-Zip;%PATH%
+        set PATH=C:\mingw540_32\bin;C:\Qt\4.8.7p\mingw540_32\bin;C:\mysql-5.5.62-win32\lib;C:\mysql-5.5.62-win32\bin;C:\OpenSSL\bin;C:\Strawberry\perl\bin;C:\Miniconda;C:\Miniconda\Scripts;C:\Windows\System32;C:\Program Files\7-Zip;%PATH%
         if exist "C:\Program Files\Git\usr\bin\patch.exe" set PATCH=C:\Program Files\Git\usr\bin\patch.exe
         if not defined PATCH (
         echo PATCH not found
@@ -50,23 +50,48 @@ jobs:
         set OPENSSL_INCLUDE=C:\OpenSSL\include
         set OPENSSL_MODE=-openssl-linked
         set OPENSSL_LIBS="-lssleay32 -llibeay32"
-        set mode=-debug-and-release
-        set exclude=-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-scripttools -no-script -nomake tests -nomake examples
+        set exclude=-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-scripttools -no-script -nomake tests -nomake examples -nomake demos -nomake tools
         pushd qt-everywhere-opensource-src-4.8.7
             "%PATCH%" -N -p1 -i ..\0001-fix-doc-script.patch
             "%PATCH%" -N -p1 -i ..\0001-add-mysql-to-LIBS.patch
             "%PATCH%" -N -p1 -i ..\0001-profile-flag.patch
-            configure -prefix C:\Qt\4.8.7-profile\mingw540_32 -opensource -confirm-license -static -platform win32-g++ -opengl desktop -debug %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -I %OPENSSL_INCLUDE% -L %OPENSSL_BIN% -openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32"
-            mingw32-make -j4
-            if not exist bin\sqldrivers mkdir bin\sqldrivers
-            copy /y plugins\sqldrivers\qsqlite4.dll bin\sqldrivers
-            mingw32-make docs
-            mingw32-make install
+            "%PATCH%" -N -p1 -i ..\0001-uic3fix.patch
+            "%PATCH%" -N -p1 -i ..\0001-mysql-driver.patch
+            "%PATCH%" -N -p1 -i ..\0001-pg-flag-in-specs.patch
+            configure -prefix C:\Qt\4.8.7p\mingw540_32 -opensource -developer-build -confirm-license -static -platform win32-g++ -opengl desktop -debug %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -I %OPENSSL_INCLUDE% -L %OPENSSL_BIN% -openssl-linked OPENSSL_LIBS="-lssleay32 -llibeay32"
+            mingw32-make -j4 sub-tools-bootstrap-all-ordered || exit /b
+            mingw32-make -j4 sub-moc-all-ordered || exit /b
+            mingw32-make -j4 sub-rcc-all-ordered || exit /b
+            mingw32-make -j4 sub-uic-all-ordered || exit /b
+            mingw32-make -j4 sub-winmain-all-ordered || exit /b
+            mingw32-make -j4 sub-corelib-all-ordered || exit /b
+            mingw32-make -j4 sub-xml-all-ordered || exit /b
+            mingw32-make -j4 sub-network-all-ordered || exit /b
+            mingw32-make -j4 sub-sql-all-ordered || exit /b
+            mingw32-make -j4 sub-testlib-all-ordered || exit /b
+            mingw32-make -j4 sub-gui-all-ordered || exit /b
+            mingw32-make -j4 sub-idc-all-ordered || exit /b
+            mingw32-make -j4 sub-activeqt-all-ordered || exit /b
+            mingw32-make -j4 sub-svg-all-ordered || exit /b
+            mingw32-make -j4 sub-tools-bootstrap-install_subtargets-ordered || exit /b
+            mingw32-make -j4 sub-moc-install_subtargets-ordered || exit /b
+            mingw32-make -j4 sub-rcc-install_subtargets-ordered || exit /b
+            mingw32-make -j4 sub-uic-install_subtargets-ordered || exit /b
+            mingw32-make -j4 sub-winmain-install_subtargets-ordered || exit /b
+            mingw32-make -j4 sub-corelib-install_subtargets-ordered || exit /b
+            mingw32-make -j4 sub-xml-install_subtargets-ordered || exit /b
+            mingw32-make -j4 sub-network-install_subtargets-ordered || exit /b
+            mingw32-make -j4 sub-sql-install_subtargets-ordered || exit /b
+            mingw32-make -j4 sub-testlib-install_subtargets-ordered || exit /b
+            mingw32-make -j4 sub-gui-install_subtargets-ordered || exit /b
+            mingw32-make -j4 sub-idc-install_subtargets-ordered || exit /b
+            mingw32-make -j4 sub-activeqt-install_subtargets-ordered || exit /b
+            mingw32-make -j4 sub-svg-install_subtargets-ordered || exit /b
+            mingw32-make install_qmake
+            mingw32-make install_mkspecs
         popd
-        mugideploy copy-dep --bin C:\Qt\4.8.7-profile\mingw540_32\bin\qmake.exe --dst C:\Qt\4.8.7-profile\mingw540_32\bin
-        mugideploy copy-dep --bin C:\Qt\4.8.7-profile\mingw540_32\bin\QtNetwork4.dll --dst C:\Qt\4.8.7-profile\mingw540_32\bin
-        mugideploy copy-dep --bin C:\Qt\4.8.7-profile\mingw540_32\plugins\sqldrivers\qsqlmysql4.dll --dst C:\Qt\4.8.7-profile\mingw540_32\bin
-        7z a -y Qt-4.8.7.7z C:\Qt\4.8.7-profile\mingw540_32
+        mugideploy copy-dep --bin C:\Qt\4.8.7p\mingw540_32\bin\qmake.exe --dst C:\Qt\4.8.7p\mingw540_32\bin
+        7z a -y Qt-4.8.7.7z C:\Qt\4.8.7p\mingw540_32
     - name: upload
       uses: actions/upload-artifact@v4
       with:
