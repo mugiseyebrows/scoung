@@ -1,8 +1,9 @@
+{% set prefix = "C:\\Qt\\4.8.7\\mingw_32" %}
+
 def mingw
-    if_exist_return(C:\mingw540_32\bin\gcc.exe)
+    if_exist_return(C:\mingw5\mingw32\bin\gcc.exe)
     download("https://netix.dl.sourceforge.net/project/mingw-w64/Toolchains%%20targetting%%20Win32/Personal%%20Builds/mingw-builds/5.4.0/threads-win32/dwarf/i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z", :cache)
-    7z rn i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z mingw32 mingw540_32
-    unzip(i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z, :o=C:\)
+    unzip(i686-5.4.0-release-win32-dwarf-rt_v5-rev0.7z, :o=C:\mingw5)
 
 def mysql
     if_exist_return(C:\mysql-5.5.62-win32\bin\mysql.exe)
@@ -16,66 +17,50 @@ def openssl
 
 def main depends on mingw mysql openssl
     github_checkout()
-    move /y "C:\Program Files\OpenSSL" "C:\Program Files\OpenSSL_"
-    move /y "C:\mingw64" "C:\mingw64_"
-    add_path(C:\mingw540_32\bin)
-    add_path(C:\Qt\4.8.7\mingw540_32\bin)
+    #move /y "C:\Program Files\OpenSSL" "C:\Program Files\OpenSSL_"
+    #move /y "C:\mingw64" "C:\mingw64_"
+    add_path(C:\mingw5\mingw32\bin)
+    add_path({{prefix}}\bin)
     add_path(C:\mysql-5.5.62-win32\lib)
     add_path(C:\mysql-5.5.62-win32\bin)
     add_path(C:\OpenSSL\bin)
     add_path(C:\Strawberry\perl\bin)
-    use(conda)
-    install(mugideploy)
+    #use(conda)
+    use(python, 3.13)
+    pip_install(mugideploy)
 
-    # where gcc
-    # where mingw32-make
-    # where perl
-    # dir C:\OpenSSL\bin
-    # dir C:\mysql-5.5.62-win32\lib
-
-    #PERL = find_app([C:\Strawberry\perl\bin\perl.exe])
-    #MINGW = find_app([%CD%\mingw32\bin\gcc.exe])
-    
     # https://download.qt.io/archive/qt/4.7/qt-everywhere-opensource-src-4.7.4.zip
 
-    download(https://download.qt.io/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.zip, :cache)
+    download(https://download.qt.io/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.zip, :cache, :v)
     
     unzip(qt-everywhere-opensource-src-4.8.7.zip, :t=qt-everywhere-opensource-src-4.8.7)
 
-    #download(https://github.com/mugiseyebrows/build-openssl/releases/download/1.1.1n/OpenSSL-1.1.1n-i686.zip, OpenSSL-1.1.1n-i686.zip)
-    #unzip(OpenSSL-1.1.1n-i686.zip, OpenSSL)
-
-    set MYSQL_INCLUDE=C:\mysql-5.5.62-win32\include
-    set MYSQL_BIN=C:\mysql-5.5.62-win32\lib
-
-    set OPENSSL_BIN=C:\OpenSSL\bin
-    set OPENSSL_INCLUDE=C:\OpenSSL\include
-    set OPENSSL_MODE=-openssl-linked 
-    set OPENSSL_LIBS="-lssleay32 -llibeay32"
+    #set OPENSSL_LIBS="-lssleay32 -llibeay32"
     
-    set mode=-debug-and-release
-    #set mode=-release
-    
-    set exclude=-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-scripttools -no-script -nomake tests -nomake examples
-
     pushd qt-everywhere-opensource-src-4.8.7
         #patch(..\0001-include-winerror.h.patch, :N, :p=1)
         patch(..\0001-fix-doc-script.patch, :N, :p1)
         patch(..\0001-add-mysql-to-LIBS.patch, :N, :p1)
         #mingw32-make confclean
-        call configure -prefix C:\Qt\4.8.7\mingw540_32 -opensource -developer-build -confirm-license -shared -platform win32-g++ %OPENSSL_MODE% -opengl desktop %mode% %exclude% -plugin-sql-mysql -plugin-sql-odbc -I %MYSQL_INCLUDE% -L %MYSQL_BIN% -I %OPENSSL_INCLUDE% -L %OPENSSL_BIN%
+
+        {% set mysql_conf = "-plugin-sql-mysql -I C:/mysql-5.5.62-win32/include -L C:/mysql-5.5.62-win32/lib" %}
+        {% set openssl_conf = "-openssl-linked OPENSSL_LIBS=\"-lssleay32 -llibeay32\" -I C:/OpenSSL/include -L C:/OpenSSL/bin" %}
+        {% set mode = "-debug-and-release" %}
+        {% set exclude = "-no-declarative -no-multimedia -no-xmlpatterns -no-webkit -no-scripttools -no-script -nomake tests -nomake examples" %}
+
+        call configure -prefix {{prefix}} -opensource -developer-build -confirm-license -shared -platform win32-g++ -opengl desktop {{mode}} {{exclude}} -plugin-sql-odbc {{mysql_conf}} {{openssl_conf}}
         
-        mingw32-make -j4
+        mingw32-make -j4 || exit /b
         mkdir(bin\sqldrivers)
         copy(plugins\sqldrivers\qsqlite4.dll, bin\sqldrivers)
         mingw32-make docs
         mingw32-make install
     popd
-    mugideploy copy-dep --bin C:\Qt\4.8.7\mingw540_32\bin\qmake.exe --dst C:\Qt\4.8.7\mingw540_32\bin
-    mugideploy copy-dep --bin C:\Qt\4.8.7\mingw540_32\bin\QtNetwork4.dll --dst C:\Qt\4.8.7\mingw540_32\bin
-    mugideploy copy-dep --bin C:\Qt\4.8.7\mingw540_32\plugins\sqldrivers\qsqlmysql4.dll --dst C:\Qt\4.8.7\mingw540_32\bin
+    mugideploy copy-dep --bin {{prefix}}\bin\qmake.exe --dst {{prefix}}\bin
+    mugideploy copy-dep --bin {{prefix}}\bin\QtNetwork4.dll --dst {{prefix}}\bin
+    mugideploy copy-dep --bin {{prefix}}\plugins\sqldrivers\qsqlmysql4.dll --dst {{prefix}}\bin
     
-    zip(Qt-4.8.7.7z, C:\Qt\4.8.7\mingw540_32)
+    zip(Qt-4.8.7.7z, {{prefix}})
     github_upload(Qt-4.8.7.7z)
     github_release(Qt-4.8.7.7z)
 
