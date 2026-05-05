@@ -41,6 +41,7 @@ def main depends on mingw mysql openssl
         #patch(..\0001-include-winerror.h.patch, :N, :p=1)
         patch(..\0001-fix-doc-script.patch, :N, :p1)
         patch(..\0001-add-mysql-to-LIBS.patch, :N, :p1)
+        patch(..\0001-mysql-avoid-minus-zero-value.patch, :N, :p1)
         #mingw32-make confclean
 
         {% set mysql_conf = "-plugin-sql-mysql -I C:/mysql-5.5.62-win32/include -L C:/mysql-5.5.62-win32/lib" %}

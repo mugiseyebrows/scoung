@@ -1,0 +1,49 @@
+From d5d67f52084e11d70dd6d36f56eec3befa114bac Mon Sep 17 00:00:00 2001
+From: Doronin Stanislav <mugisbrows@gmail.com>
+Date: Tue, 5 May 2026 16:44:28 +0300
+Subject: [PATCH] mysql avoid minus zero value
+
+---
+ src/sql/drivers/mysql/qsql_mysql.cpp | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/src/sql/drivers/mysql/qsql_mysql.cpp b/src/sql/drivers/mysql/qsql_mysql.cpp
+index 0ecc1ad..5dcd3bc 100644
+--- a/src/sql/drivers/mysql/qsql_mysql.cpp
++++ b/src/sql/drivers/mysql/qsql_mysql.cpp
+@@ -848,6 +848,9 @@ void QMYSQLResult::virtual_hook(int id, void *data)
+     }
+ }
+ 
++#ifndef MYSQL_VERSION_ID
++#define MYSQL_VERSION_ID		50562
++#endif
+ 
+ #if MYSQL_VERSION_ID >= 40108
+ 
+@@ -919,6 +922,8 @@ bool QMYSQLResult::prepare(const QString& query)
+ 
+ bool QMYSQLResult::exec()
+ {
++    static double ZERO = 0;
++
+     if (!d->driver)
+         return false;
+     if (!d->preparedQuery)
+@@ -956,6 +961,13 @@ bool QMYSQLResult::exec()
+             currBind->length = 0;
+             currBind->is_unsigned = 0;
+ 
++            if (val.type() == QVariant::Double) {
++                double d = val.toDouble();
++                if (d > -1e-40 && d < 0) {
++                    data = (void *) &ZERO;
++                }
++            }
++
+             switch (val.type()) {
+                 case QVariant::ByteArray:
+                     currBind->buffer_type = MYSQL_TYPE_BLOB;
+-- 
+2.45.2.windows.1
+
